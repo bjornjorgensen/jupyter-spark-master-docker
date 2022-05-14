@@ -27,7 +27,7 @@ ARG openjdk_version="11"
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
     "openjdk-${openjdk_version}-jdk-headless" \
-    ca-certificates-java nano && \
+    ca-certificates-java && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     pip install --upgrade pip setuptools && \
     mkdir -p /opt/spark && \
