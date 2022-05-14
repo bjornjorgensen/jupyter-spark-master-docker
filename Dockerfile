@@ -43,9 +43,11 @@ WORKDIR /tmp/spark
 
 RUN ./build/mvn -DskipTests clean package && ./dev/make-distribution.sh --name spark-master --pip
 
-WORKDIR /tmp/spark/dist 
+WORKDIR /tmp/spark/dist
+USER ${NB_UID} 
+RUN pip install -e python
 
-
+USER root
 # Based on the Spark dockerfile
 RUN  mv jars /opt/spark/jars && \
     mv bin /opt/spark/bin && \
@@ -60,6 +62,8 @@ RUN  mv jars /opt/spark/jars && \
     mv LICENSE /opt/spark/LICENSE && \
     mv licenses /opt/spark/licenses && \
     mv python /opt/spark/python
+
+
 
 ENV SPARK_HOME /opt/spark
 
@@ -90,8 +94,9 @@ RUN fix-permissions "${SPARK_HOME}" && \
     fix-permissions "/home/${NB_USER}" && \
     fix-permissions "/home/jovyan/.cache/"
 
-USER ${NB_UID}
-RUN pip install -e ${SPARK_HOME}/python
+#USER ${NB_UID}
+#RUN ls /opt/spark/python
+#RUN pip install -e /opt/spark/python
 RUN fix-permissions "/home/${NB_USER}"
 
 # Add S3A support
