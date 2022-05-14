@@ -26,10 +26,57 @@ ARG openjdk_version="11"
 
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
-    "openjdk-${openjdk_version}-jre-headless" \
-    ca-certificates-java && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    "openjdk-${openjdk_version}-jdk-headless" \
+    ca-certificates-java nano && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /opt/spark && \
+    mkdir -p /opt/spark/examples && \
+    mkdir -p /opt/spark/work-dir && \
+    touch /opt/spark/RELEASE
 
+WORKDIR /tmp 
+
+RUN git clone https://github.com/apache/spark.git
+
+WORKDIR /tmp/spark 
+
+RUN ./build/mvn -DskipTests clean package && ./dev/make-distribution.sh --name spark-master --pip
+
+WORKDIR /tmp/spark/dist 
+
+
+# Based on the Spark dockerfile
+
+COPY jars /opt/spark/jars
+COPY bin /opt/spark/bin
+COPY sbin /opt/spark/sbin
+#COPY kubernetes/dockerfiles/spark/entrypoint.sh /opt/
+# Wildcard so it covers decom.sh present (3.1+) and not present (pre-3.1)
+#COPY kubernetes/dockerfiles/spark/decom.sh* /opt/
+COPY examples /opt/spark/examples
+#COPY kubernetes/tests /opt/spark/tests
+COPY data /opt/spark/data
+# We need to copy over the license file so we can pip install PySpark
+COPY LICENSE /opt/spark/LICENSE
+COPY licenses /opt/spark/licenses
+
+ENV SPARK_HOME /opt/spark
+
+# Note: don't change the workdir since then your Jupyter notebooks won't persist.
+RUN chmod g+w /opt/spark/work-dir
+# Wildcard so it covers decom.sh present (3.1+) and not present (pre-3.1)
+RUN chmod a+x /opt/decom.sh* || echo "No decom script present, assuming pre-3.1"
+
+# Copy pyspark with setup files and everything
+COPY python ${SPARK_HOME}/python
+
+# Add PySpark to PYTHON_PATH
+
+RUN pip install -e ${SPARK_HOME}/python
+
+# Add S3A support
+ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.179/aws-java-sdk-bundle-1.12.179.jar ${SPARK_HOME}/jars/
+ADD https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.1/hadoop-aws-3.3.1.jar ${SPARK_HOME}/jars/
 # Spark installation
 #WORKDIR /tmp
 #RUN wget -q "https://archive.apache.org/dist/spark/spark-${APACHE_SPARK_VERSION}/spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" && \
