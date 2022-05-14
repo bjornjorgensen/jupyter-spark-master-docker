@@ -52,11 +52,11 @@ USER root
 RUN  mv jars /opt/spark/jars && \
     mv bin /opt/spark/bin && \
     mv sbin /opt/spark/sbin && \
-    mv kubernetes/dockerfiles/spark/entrypoint.sh /opt/
+    mv kubernetes/dockerfiles/spark/entrypoint.sh /opt/ && \
 # Wildcard so it covers decom.sh present (3.1+) and not present (pre-3.1)
-    mv kubernetes/dockerfiles/spark/decom.sh* /opt/
+    mv kubernetes/dockerfiles/spark/decom.sh* /opt/ && \
     mv examples /opt/spark/examples && \
-    mv kubernetes/tests /opt/spark/tests
+    mv kubernetes/tests /opt/spark/tests && \
     mv data /opt/spark/data && \
 # We need to copy over the license file so we can pip install PySpark
     mv LICENSE /opt/spark/LICENSE && \
