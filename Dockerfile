@@ -29,6 +29,7 @@ RUN apt-get update --yes && \
     "openjdk-${openjdk_version}-jdk-headless" \
     ca-certificates-java nano && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    pip install --upgrade pip setuptools && \
     mkdir -p /opt/spark && \
     mkdir -p /opt/spark/examples && \
     mkdir -p /opt/spark/work-dir && \
@@ -58,20 +59,40 @@ RUN  mv jars /opt/spark/jars && \
 # We need to copy over the license file so we can pip install PySpark
     mv LICENSE /opt/spark/LICENSE && \
     mv licenses /opt/spark/licenses
+    mv python /opt/spark/python
 
 ENV SPARK_HOME /opt/spark
 
+RUN fix-permissions "${SPARK_HOME}" && \
+    fix-permissions "/opt/spark/jars" && \
+    fix-permissions "/opt/spark/bin" && \
+    fix-permissions "/opt/spark/sbin" && \
+    fix-permissions "/opt/spark/examples" && \
+    fix-permissions "/opt/spark/data" && \
+    fix-permissions "/opt/spark/LICENSE" && \
+    fix-permissions "/opt/spark/python" && \
+    fix-permissions "/opt/spark/licenses"
+    
 # Note: don't change the workdir since then your Jupyter notebooks won't persist.
 RUN chmod g+w /opt/spark/work-dir
 # Wildcard so it covers decom.sh present (3.1+) and not present (pre-3.1)
 RUN chmod a+x /opt/decom.sh* || echo "No decom script present, assuming pre-3.1"
 
 # Copy pyspark with setup files and everything
-RUN mv python ${SPARK_HOME}/python
+#RUN mv python ${SPARK_HOME}/python
+#RUN rm -R /tmp/spark/
 
 # Add PySpark to PYTHON_PATH
+#RUN chmod a+rx ${SPARK_HOME}/python
+#USER ${NB_UID}
 
+RUN fix-permissions "${SPARK_HOME}" && \
+    fix-permissions "/home/${NB_USER}" && \
+    fix-permissions "/home/jovyan/.cache/"
+
+USER ${NB_UID}
 RUN pip install -e ${SPARK_HOME}/python
+RUN fix-permissions "/home/${NB_USER}"
 
 # Add S3A support
 ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.179/aws-java-sdk-bundle-1.12.179.jar ${SPARK_HOME}/jars/
