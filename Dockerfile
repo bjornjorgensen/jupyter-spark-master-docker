@@ -58,7 +58,7 @@ RUN  mv jars /opt/spark/jars && \
     mv data /opt/spark/data && \
 # We need to copy over the license file so we can pip install PySpark
     mv LICENSE /opt/spark/LICENSE && \
-    mv licenses /opt/spark/licenses
+    mv licenses /opt/spark/licenses && \
     mv python /opt/spark/python
 
 ENV SPARK_HOME /opt/spark
@@ -72,7 +72,7 @@ RUN fix-permissions "${SPARK_HOME}" && \
     fix-permissions "/opt/spark/LICENSE" && \
     fix-permissions "/opt/spark/python" && \
     fix-permissions "/opt/spark/licenses"
-    
+
 # Note: don't change the workdir since then your Jupyter notebooks won't persist.
 RUN chmod g+w /opt/spark/work-dir
 # Wildcard so it covers decom.sh present (3.1+) and not present (pre-3.1)
