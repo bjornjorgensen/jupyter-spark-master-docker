@@ -41,7 +41,7 @@ RUN git clone https://github.com/apache/spark.git
 
 WORKDIR /build/spark 
 
-RUN ./build/mvn -DskipTests clean package && ./dev/make-distribution.sh --name spark-master --pip
+RUN ./dev/make-distribution.sh --name spark-master --pip -Pkubernetes
 
 WORKDIR /build/spark/dist
 USER ${NB_UID} 
@@ -52,11 +52,11 @@ USER root
 RUN  mv jars /opt/spark/jars && \
     mv bin /opt/spark/bin && \
     mv sbin /opt/spark/sbin && \
-#COPY kubernetes/dockerfiles/spark/entrypoint.sh /opt/
+    mv kubernetes/dockerfiles/spark/entrypoint.sh /opt/
 # Wildcard so it covers decom.sh present (3.1+) and not present (pre-3.1)
-#COPY kubernetes/dockerfiles/spark/decom.sh* /opt/
+    mv kubernetes/dockerfiles/spark/decom.sh* /opt/
     mv examples /opt/spark/examples && \
-#COPY kubernetes/tests /opt/spark/tests
+    mv kubernetes/tests /opt/spark/tests
     mv data /opt/spark/data && \
 # We need to copy over the license file so we can pip install PySpark
     mv LICENSE /opt/spark/LICENSE && \
