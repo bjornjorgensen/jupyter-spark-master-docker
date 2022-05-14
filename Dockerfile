@@ -46,19 +46,18 @@ WORKDIR /tmp/spark/dist
 
 
 # Based on the Spark dockerfile
-
-COPY jars /opt/spark/jars
-COPY bin /opt/spark/bin
-COPY sbin /opt/spark/sbin
+RUN  mv jars /opt/spark/jars && \
+    mv bin /opt/spark/bin && \
+    mv sbin /opt/spark/sbin && \
 #COPY kubernetes/dockerfiles/spark/entrypoint.sh /opt/
 # Wildcard so it covers decom.sh present (3.1+) and not present (pre-3.1)
 #COPY kubernetes/dockerfiles/spark/decom.sh* /opt/
-COPY examples /opt/spark/examples
+    mv examples /opt/spark/examples && \
 #COPY kubernetes/tests /opt/spark/tests
-COPY data /opt/spark/data
+    mv data /opt/spark/data && \
 # We need to copy over the license file so we can pip install PySpark
-COPY LICENSE /opt/spark/LICENSE
-COPY licenses /opt/spark/licenses
+    mv LICENSE /opt/spark/LICENSE && \
+    mv licenses /opt/spark/licenses
 
 ENV SPARK_HOME /opt/spark
 
@@ -68,7 +67,7 @@ RUN chmod g+w /opt/spark/work-dir
 RUN chmod a+x /opt/decom.sh* || echo "No decom script present, assuming pre-3.1"
 
 # Copy pyspark with setup files and everything
-COPY python ${SPARK_HOME}/python
+RUN mv python ${SPARK_HOME}/python
 
 # Add PySpark to PYTHON_PATH
 
