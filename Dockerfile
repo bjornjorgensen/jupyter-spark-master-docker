@@ -8,7 +8,7 @@ FROM $BASE_CONTAINER
 
 # Fix: https://github.com/hadolint/hadolint/wiki/DL4006
 # Fix: https://github.com/koalaman/shellcheck/wiki/SC3014
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+#SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
 
