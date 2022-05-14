@@ -35,15 +35,15 @@ RUN apt-get update --yes && \
     mkdir -p /opt/spark/work-dir && \
     touch /opt/spark/RELEASE
 
-WORKDIR /tmp 
+WORKDIR /build
 
 RUN git clone https://github.com/apache/spark.git
 
-WORKDIR /tmp/spark 
+WORKDIR /build/spark 
 
 RUN ./build/mvn -DskipTests clean package && ./dev/make-distribution.sh --name spark-master --pip
 
-WORKDIR /tmp/spark/dist
+WORKDIR /build/spark/dist
 USER ${NB_UID} 
 RUN pip install -e python
 
