@@ -2,7 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 ARG OWNER=jupyter
 ARG BASE_CONTAINER=$OWNER/scipy-notebook
-FROM $BASE_CONTAINER
+FROM ubuntu
 
 #LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -41,10 +41,10 @@ RUN git clone https://github.com/apache/spark.git
 
 WORKDIR /build/spark 
 
-RUN sh build/mvn -DskipTests clean package && sh dev/make-distribution.sh --name spark-master --pip -Pkubernetes
+RUN  ./build/mvn -DskipTests clean package && ./dev/make-distribution.sh --name spark-master --pip
 
 WORKDIR /build/spark/dist
-USER ${NB_UID} 
+#USER ${NB_UID} 
 RUN pip install -e python
 
 USER root
@@ -52,11 +52,11 @@ USER root
 RUN  mv jars /opt/spark/jars && \
     mv bin /opt/spark/bin && \
     mv sbin /opt/spark/sbin && \
-    mv kubernetes/dockerfiles/spark/entrypoint.sh /opt/ && \
+    #mv kubernetes/dockerfiles/spark/entrypoint.sh /opt/ && \
 # Wildcard so it covers decom.sh present (3.1+) and not present (pre-3.1)
-    mv kubernetes/dockerfiles/spark/decom.sh* /opt/ && \
+    #mv kubernetes/dockerfiles/spark/decom.sh* /opt/ && \
     mv examples /opt/spark/examples && \
-    mv kubernetes/tests /opt/spark/tests && \
+    #mv kubernetes/tests /opt/spark/tests && \
     mv data /opt/spark/data && \
 # We need to copy over the license file so we can pip install PySpark
     mv LICENSE /opt/spark/LICENSE && \
@@ -67,15 +67,15 @@ RUN  mv jars /opt/spark/jars && \
 
 ENV SPARK_HOME /opt/spark
 
-RUN fix-permissions "${SPARK_HOME}" && \
-    fix-permissions "/opt/spark/jars" && \
-    fix-permissions "/opt/spark/bin" && \
-    fix-permissions "/opt/spark/sbin" && \
-    fix-permissions "/opt/spark/examples" && \
-    fix-permissions "/opt/spark/data" && \
-    fix-permissions "/opt/spark/LICENSE" && \
-    fix-permissions "/opt/spark/python" && \
-    fix-permissions "/opt/spark/licenses"
+#RUN fix-permissions "${SPARK_HOME}" && \
+#    fix-permissions "/opt/spark/jars" && \
+#    fix-permissions "/opt/spark/bin" && \
+#    fix-permissions "/opt/spark/sbin" && \
+#    fix-permissions "/opt/spark/examples" && \
+#    fix-permissions "/opt/spark/data" && \
+#    fix-permissions "/opt/spark/LICENSE" && \
+#    fix-permissions "/opt/spark/python" && \
+#    fix-permissions "/opt/spark/licenses"
 
 # Note: don't change the workdir since then your Jupyter notebooks won't persist.
 RUN chmod g+w /opt/spark/work-dir
@@ -90,14 +90,14 @@ RUN chmod a+x /opt/decom.sh* || echo "No decom script present, assuming pre-3.1"
 #RUN chmod a+rx ${SPARK_HOME}/python
 #USER ${NB_UID}
 
-RUN fix-permissions "${SPARK_HOME}" && \
-    fix-permissions "/home/${NB_USER}" && \
-    fix-permissions "/home/jovyan/.cache/"
+#RUN fix-permissions "${SPARK_HOME}" && \
+#    fix-permissions "/home/${NB_USER}" && \
+#    fix-permissions "/home/jovyan/.cache/"
 
 #USER ${NB_UID}
 #RUN ls /opt/spark/python
 #RUN pip install -e /opt/spark/python
-RUN fix-permissions "/home/${NB_USER}"
+#RUN fix-permissions "/home/${NB_USER}"
 
 # Add S3A support
 ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.179/aws-java-sdk-bundle-1.12.179.jar ${SPARK_HOME}/jars/
@@ -131,9 +131,9 @@ RUN chmod a+rx ${SPARK_HOME}/jars/*.jar
 
 # Configure IPython system-wide
 COPY ipython_kernel_config.py "/etc/ipython/"
-RUN fix-permissions "/etc/ipython/"
+#RUN fix-permissions "/etc/ipython/"
 
-USER ${NB_UID}
+#USER ${NB_UID}
 
 # Install pyarrow
 RUN arch=$(uname -m) && \
@@ -145,8 +145,8 @@ RUN arch=$(uname -m) && \
     mamba install --quiet --yes \
     'pyarrow' && \
     mamba clean --all -f -y && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+#    fix-permissions "${CONDA_DIR}" && \
+#    fix-permissions "/home/${NB_USER}"
 
 WORKDIR "${HOME}"
 
