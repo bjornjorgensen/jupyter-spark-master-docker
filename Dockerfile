@@ -52,7 +52,8 @@ RUN git clone https://github.com/apache/spark.git
 
 WORKDIR /build/spark 
 
-RUN  ./build/mvn -DskipTests clean package && ./dev/make-distribution.sh --name spark-master --pip
+RUN  ./build/mvn -DskipTests clean package && \
+    ./dev/make-distribution.sh --name spark-master --pip
 
 WORKDIR /build/spark/dist
 #USER ${NB_UID} 
