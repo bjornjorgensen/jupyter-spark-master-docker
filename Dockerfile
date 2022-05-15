@@ -54,8 +54,9 @@ WORKDIR /build/spark
 
 RUN export MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g"
 
-RUN  ./build/mvn -DskipTests clean package && \
-    ./dev/make-distribution.sh --name spark-master --pip
+RUN ./build/mvn -DskipTests clean package
+    
+RUN ./dev/make-distribution.sh --name spark-master --pip
 
 WORKDIR /build/spark/dist
 #USER ${NB_UID} 
