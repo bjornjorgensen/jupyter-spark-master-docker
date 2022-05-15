@@ -33,10 +33,16 @@ RUN apt-get update --yes && \
     python3 \
     pip && \
     pip install --upgrade pip setuptools && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-    #mkdir -p /opt/spark && \
-    #mkdir -p /opt/spark/examples && \
-    #mkdir -p /opt/spark/work-dir && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /opt/spark && \
+    mkdir -p /opt/spark/examples && \
+    mkdir -p /opt/spark/jars && \
+    mkdir -p /opt/spark/bin && \
+    mkdir -p /opt/spark/sbin && \
+    mkdir -p /opt/spark/data && \
+    mkdir -p /opt/spark/LICENSE && \
+    mkdir -p /opt/spark/licenses && \
+    mkdir -p /opt/spark/python
     #touch /opt/spark/RELEASE
 
 WORKDIR /build
