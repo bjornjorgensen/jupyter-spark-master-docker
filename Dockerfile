@@ -28,13 +28,13 @@ RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
     "openjdk-${openjdk_version}-jdk-headless" \
     ca-certificates-java && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
     python3-pip && \
     pip install --upgrade pip setuptools && \
-    mkdir -p /opt/spark && \
-    mkdir -p /opt/spark/examples && \
-    mkdir -p /opt/spark/work-dir && \
-    touch /opt/spark/RELEASE
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+    #mkdir -p /opt/spark && \
+    #mkdir -p /opt/spark/examples && \
+    #mkdir -p /opt/spark/work-dir && \
+    #touch /opt/spark/RELEASE
 
 WORKDIR /build
 
