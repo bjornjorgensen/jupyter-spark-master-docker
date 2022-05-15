@@ -42,7 +42,8 @@ RUN apt-get update --yes && \
     mkdir -p /opt/spark/data && \
     mkdir -p /opt/spark/LICENSE && \
     mkdir -p /opt/spark/licenses && \
-    mkdir -p /opt/spark/python
+    mkdir -p /opt/spark/python && \
+    mkdir -p /opt/spark/work-dir
     #touch /opt/spark/RELEASE
 
 WORKDIR /build
