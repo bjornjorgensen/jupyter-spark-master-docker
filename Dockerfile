@@ -24,11 +24,14 @@ ARG openjdk_version="11"
 #ENV APACHE_SPARK_VERSION="${spark_version}" \
 #    HADOOP_VERSION="${hadoop_version}"
 
+
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
     "openjdk-${openjdk_version}-jdk-headless" \
-    ca-certificates-java && \
-    python3-pip && \
+    ca-certificates-java \
+    git \
+    python3 \
+    pip && \
     pip install --upgrade pip setuptools && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
     #mkdir -p /opt/spark && \
