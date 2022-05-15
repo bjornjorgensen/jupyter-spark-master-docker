@@ -57,7 +57,7 @@ ENV MAVEN_CLI_OPTS="--no-transfer-progress"
 
 RUN ./build/mvn -DskipTests clean package
     
-RUN ./dev/make-distribution.sh --name spark-master --pip
+RUN ./dev/make-distribution.sh --name custom-spark --pip --r --tgz -Psparkr -Phive -Phive-thriftserver -Pmesos -Pyarn -Pkubernetes
 
 WORKDIR /build/spark/dist
 #USER ${NB_UID} 
