@@ -41,7 +41,7 @@ RUN git clone https://github.com/apache/spark.git
 
 WORKDIR /build/spark 
 
-RUN /dev/make-distribution.sh --name spark-master --pip -Pkubernetes
+RUN sh /build/mvn -DskipTests clean package && sh /dev/make-distribution.sh --name spark-master --pip -Pkubernetes
 
 WORKDIR /build/spark/dist
 USER ${NB_UID} 
