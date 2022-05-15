@@ -29,7 +29,7 @@ RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
     "openjdk-${openjdk_version}-jdk-headless" \
     ca-certificates-java \
-    git \
+    git maven wget\
     python3 \
     pip && \
     pip install --upgrade pip setuptools && \
