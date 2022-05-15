@@ -52,7 +52,8 @@ RUN git clone https://github.com/apache/spark.git
 
 WORKDIR /build/spark 
 
-RUN export MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g"
+ENV MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN"
+ENV MAVEN_CLI_OPTS="--no-transfer-progress"
 
 RUN ./build/mvn -DskipTests clean package
     
