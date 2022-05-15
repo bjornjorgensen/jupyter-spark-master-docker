@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG OWNER=jupyter
-ARG BASE_CONTAINER=$OWNER/scipy-notebook
+#ARG OWNER=jupyter
+#ARG BASE_CONTAINER=$OWNER/scipy-notebook
 FROM ubuntu
 
 #LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
@@ -29,6 +29,7 @@ RUN apt-get update --yes && \
     "openjdk-${openjdk_version}-jdk-headless" \
     ca-certificates-java && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    python3-pip && \
     pip install --upgrade pip setuptools && \
     mkdir -p /opt/spark && \
     mkdir -p /opt/spark/examples && \
@@ -136,15 +137,15 @@ COPY ipython_kernel_config.py "/etc/ipython/"
 #USER ${NB_UID}
 
 # Install pyarrow
-RUN arch=$(uname -m) && \
-    if [ "${arch}" == "aarch64" ]; then \
+#RUN arch=$(uname -m) && \
+#    if [ "${arch}" == "aarch64" ]; then \
         # Prevent libmamba from sporadically hanging on arm64 under QEMU
         # <https://github.com/mamba-org/mamba/issues/1611>
-        export G_SLICE=always-malloc; \
-    fi && \
-    mamba install --quiet --yes \
-    'pyarrow' && \
-    mamba clean --all -f -y && \
+#        export G_SLICE=always-malloc; \
+#    fi && \
+#    mamba install --quiet --yes \
+#    'pyarrow' && \
+#    mamba clean --all -f -y && \
 #    fix-permissions "${CONDA_DIR}" && \
 #    fix-permissions "/home/${NB_USER}"
 
