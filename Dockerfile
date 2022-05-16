@@ -55,9 +55,9 @@ WORKDIR /build/spark
 ENV MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN"
 ENV MAVEN_CLI_OPTS="--no-transfer-progress"
 
-RUN ./build/mvn -DskipTests clean package
+RUN [./build/mvn, -DskipTests, clean, package]
     
-RUN ./dev/make-distribution.sh --name spark-master --pip
+RUN [./dev/make-distribution.sh, --pip]
 
 WORKDIR /build/spark/dist
 #USER ${NB_UID} 
