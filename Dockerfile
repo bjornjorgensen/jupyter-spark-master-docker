@@ -2,7 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 #ARG OWNER=jupyter
 #ARG BASE_CONTAINER=$OWNER/scipy-notebook
-FROM ubuntu:20.04
+FROM ubuntu
 
 #LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -55,9 +55,9 @@ WORKDIR /build/spark
 ENV MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN"
 ENV MAVEN_CLI_OPTS="--no-transfer-progress"
 
-RUN [./build/mvn, -DskipTests, clean, package]
+RUN ["./build/mvn", "-DskipTests", "clean", "package"]
     
-RUN [./dev/make-distribution.sh, --pip]
+RUN ["./dev/make-distribution.sh", "--pip"]
 
 WORKDIR /build/spark/dist
 #USER ${NB_UID} 
