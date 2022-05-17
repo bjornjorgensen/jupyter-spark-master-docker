@@ -151,22 +151,22 @@ RUN chmod a+rx ${SPARK_HOME}/jars/*.jar
 
 # Configure IPython system-wide
 COPY ipython_kernel_config.py "/etc/ipython/"
-#RUN fix-permissions "/etc/ipython/"
+RUN fix-permissions "/etc/ipython/"
 
-#USER ${NB_UID}
+USER ${NB_UID}
 
-# Install pyarrow
-#RUN arch=$(uname -m) && \
-#    if [ "${arch}" == "aarch64" ]; then \
-        # Prevent libmamba from sporadically hanging on arm64 under QEMU
-        # <https://github.com/mamba-org/mamba/issues/1611>
-#        export G_SLICE=always-malloc; \
-#    fi && \
-#    mamba install --quiet --yes \
-#    'pyarrow' && \
-#    mamba clean --all -f -y && \
-#    fix-permissions "${CONDA_DIR}" && \
-#    fix-permissions "/home/${NB_USER}"
+#Install pyarrow
+RUN arch=$(uname -m) && \
+    if [ "${arch}" == "aarch64" ]; then \
+        Prevent libmamba from sporadically hanging on arm64 under QEMU
+        <https://github.com/mamba-org/mamba/issues/1611>
+        export G_SLICE=always-malloc; \
+    fi && \
+    mamba install --quiet --yes \
+    'pyarrow' && \
+    mamba clean --all -f -y && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
 
 WORKDIR "${HOME}"
 
