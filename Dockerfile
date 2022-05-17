@@ -158,8 +158,8 @@ USER ${NB_UID}
 #Install pyarrow
 RUN arch=$(uname -m) && \
     if [ "${arch}" == "aarch64" ]; then \
-        Prevent libmamba from sporadically hanging on arm64 under QEMU
-        <https://github.com/mamba-org/mamba/issues/1611>
+#        Prevent libmamba from sporadically hanging on arm64 under QEMU
+#        <https://github.com/mamba-org/mamba/issues/1611>
         export G_SLICE=always-malloc; \
     fi && \
     mamba install --quiet --yes \
