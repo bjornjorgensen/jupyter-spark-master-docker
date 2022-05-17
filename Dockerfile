@@ -33,33 +33,37 @@ RUN apt-get update --yes && \
     python3 \
     pip && \
     pip install --upgrade pip setuptools && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /opt/spark && \
-    mkdir -p /opt/spark/examples && \
-    mkdir -p /opt/spark/jars && \
-    mkdir -p /opt/spark/bin && \
-    mkdir -p /opt/spark/sbin && \
-    mkdir -p /opt/spark/data && \
-    mkdir -p /opt/spark/LICENSE && \
-    mkdir -p /opt/spark/licenses && \
-    mkdir -p /opt/spark/python && \
-    mkdir -p /opt/spark/work-dir
+    apt-get clean && rm -rf /var/lib/apt/lists/* 
+ #   mkdir -p /opt/spark && \
+ #   mkdir -p /opt/spark/examples && \
+ #   mkdir -p /opt/spark/jars && \
+ #   mkdir -p /opt/spark/bin && \
+ #   mkdir -p /opt/spark/sbin && \
+ #   mkdir -p /opt/spark/data && \
+ #   mkdir -p /opt/spark/LICENSE && \
+ #   mkdir -p /opt/spark/licenses && \
+ #   mkdir -p /opt/spark/python && \
+ #   mkdir -p /opt/spark/work-dir
     #touch /opt/spark/RELEASE
 
-WORKDIR /build
+WORKDIR /root
 
 RUN git clone https://github.com/apache/spark.git
 
-WORKDIR /build/spark 
+WORKDIR /root/spark 
 
-ENV MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN"
-ENV MAVEN_CLI_OPTS="--no-transfer-progress"
+#RUN export MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g"
 
-RUN ["./build/mvn", "-DskipTests", "clean", "package"]
-    
-RUN ["./dev/make-distribution.sh", "--pip"]
+#RUN  ./build/mvn -DskipTests clean package && \
+#    ./dev/make-distribution.sh --name spark-master --pip
 
-WORKDIR /build/spark/dist
+ADD make-dist.sh /root/spark
+WORKDIR /root/spark
+RUN chmod a+x make-dist.sh
+ENV MAVEN_HOME /usr/share/maven
+#RUN ./build/mvn -DskipTests clean package 
+RUN ./make-dist.sh
+WORKDIR /root/spark/dist
 #USER ${NB_UID} 
 RUN pip install -e python
 
