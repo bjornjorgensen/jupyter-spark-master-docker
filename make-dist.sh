@@ -30,10 +30,10 @@ set -x
 
 # Figure out where the Spark framework is installed
 SPARK_HOME=/root/spark
-DISTDIR="$SPARK_HOME/dist"
+DISTDIR=/opt/spark
 
 MAKE_TGZ=false
-MAKE_PIP=true
+MAKE_PIP=false
 MAKE_R=false
 NAME=none
 MVN="$SPARK_HOME/build/mvn"

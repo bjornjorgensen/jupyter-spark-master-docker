@@ -2,7 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 #ARG OWNER=jupyter
 #ARG BASE_CONTAINER=$OWNER/scipy-notebook
-FROM ubuntu
+FROM jupyter/scipy-notebook
 
 #LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 
@@ -62,26 +62,26 @@ WORKDIR /root/spark
 RUN chmod a+x make-dist.sh
 ENV MAVEN_HOME /usr/share/maven
 #RUN ./build/mvn -DskipTests clean package 
-RUN ./make-dist.sh
+RUN ./make-dist.sh --pip
 WORKDIR /root/spark/dist
 #USER ${NB_UID} 
 RUN pip install -e python
 
 USER root
 # Based on the Spark dockerfile
-RUN  mv jars /opt/spark/jars && \
-    mv bin /opt/spark/bin && \
-    mv sbin /opt/spark/sbin && \
+#RUN  mv jars /opt/spark/jars && \
+#    mv bin /opt/spark/bin && \
+#    mv sbin /opt/spark/sbin && \
     #mv kubernetes/dockerfiles/spark/entrypoint.sh /opt/ && \
 # Wildcard so it covers decom.sh present (3.1+) and not present (pre-3.1)
     #mv kubernetes/dockerfiles/spark/decom.sh* /opt/ && \
-    mv examples /opt/spark/examples && \
+#    mv examples /opt/spark/examples && \
     #mv kubernetes/tests /opt/spark/tests && \
-    mv data /opt/spark/data && \
+#    mv data /opt/spark/data && \
 # We need to copy over the license file so we can pip install PySpark
-    mv LICENSE /opt/spark/LICENSE && \
-    mv licenses /opt/spark/licenses && \
-    mv python /opt/spark/python
+#    mv LICENSE /opt/spark/LICENSE && \
+#    mv licenses /opt/spark/licenses && \
+#    mv python /opt/spark/python
 
 
 
