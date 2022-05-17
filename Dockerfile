@@ -62,7 +62,7 @@ WORKDIR /root/spark
 RUN chmod a+x make-dist.sh
 ENV MAVEN_HOME /usr/share/maven
 #RUN ./build/mvn -DskipTests clean package 
-RUN ./make-dist.sh --pip --parallelism 1
+RUN ./make-dist.sh --pip --mvn parallelism 1
 WORKDIR /root/spark/dist
 #USER ${NB_UID} 
 RUN pip install -e python
