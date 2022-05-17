@@ -8,7 +8,7 @@ FROM jupyter/scipy-notebook
 
 # Fix: https://github.com/hadolint/hadolint/wiki/DL4006
 # Fix: https://github.com/koalaman/shellcheck/wiki/SC3014
-#SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
 
@@ -62,9 +62,9 @@ WORKDIR /root/spark
 RUN chmod a+x make-dist.sh
 ENV MAVEN_HOME /usr/share/maven
 #RUN ./build/mvn -DskipTests clean package 
-RUN ./make-dist.sh --pip --mvn parallelism 1
+RUN ./make-dist.sh --pip
 WORKDIR /root/spark/dist
-#USER ${NB_UID} 
+USER ${NB_UID} 
 RUN pip install -e python
 
 USER root
