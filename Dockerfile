@@ -63,7 +63,7 @@ RUN chmod a+x make-dist.sh
 ENV MAVEN_HOME /usr/share/maven
 #RUN ./build/mvn -DskipTests clean package 
 RUN ./make-dist.sh --pip
-WORKDIR /root/spark/dist
+WORKDIR /opt/spark
 USER ${NB_UID} 
 RUN pip install -e python
 
@@ -87,7 +87,7 @@ USER root
 
 ENV SPARK_HOME /opt/spark
 
-#RUN fix-permissions "${SPARK_HOME}" && \
+RUN fix-permissions "${SPARK_HOME}"
 #    fix-permissions "/opt/spark/jars" && \
 #    fix-permissions "/opt/spark/bin" && \
 #    fix-permissions "/opt/spark/sbin" && \
