@@ -98,7 +98,7 @@ RUN fix-permissions "${SPARK_HOME}"
 #    fix-permissions "/opt/spark/licenses"
 
 # Note: don't change the workdir since then your Jupyter notebooks won't persist.
-RUN chmod g+w /opt/spark/work-dir
+#RUN chmod g+w /opt/spark/work-dir
 # Wildcard so it covers decom.sh present (3.1+) and not present (pre-3.1)
 RUN chmod a+x /opt/decom.sh* || echo "No decom script present, assuming pre-3.1"
 
