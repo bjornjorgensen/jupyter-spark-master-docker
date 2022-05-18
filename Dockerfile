@@ -64,7 +64,7 @@ ENV MAVEN_HOME /usr/share/maven
 #RUN ./build/mvn -DskipTests clean package 
 RUN ./make-dist.sh --pip
 WORKDIR /opt/spark
-USER ${NB_UID} 
+#USER ${NB_UID} 
 RUN pip install -e python
 
 USER root
