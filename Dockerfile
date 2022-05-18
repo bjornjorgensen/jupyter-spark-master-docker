@@ -83,7 +83,7 @@ USER root
 #    mv licenses /opt/spark/licenses && \
 #    mv python /opt/spark/python
 
-
+RUN rm -Rf /root/spark
 
 ENV SPARK_HOME /opt/spark
 
