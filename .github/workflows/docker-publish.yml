@@ -26,7 +26,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - 
         name: set env
-        run: echo "NOW=$(date +'%Y.%m.%d')" >> $GITHUB_ENV    
+        run: echo "NOW=$(date +'%d%m%Y')" >> $GITHUB_ENV    
       -
         name: Build and push
         uses: docker/build-push-action@v3
