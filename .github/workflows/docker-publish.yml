@@ -1,6 +1,10 @@
 name: ci
 
 on:
+  # Triggers the workflow every day
+  schedule:
+    - cron: "0 8 * * *" 
+    
   push:
     branches:
       - 'main'
