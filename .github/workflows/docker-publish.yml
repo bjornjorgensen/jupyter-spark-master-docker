@@ -32,4 +32,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/jupyter-spark-master-docker:${{ env.NOW }} , ${{ secrets.DOCKER_HUB_USERNAME }}/jupyter-spark-master-docker:latest
+          tags: bjornjorgensen/jupyter-spark-master-docker:${{ env.NOW }} , bjornjorgensen/jupyter-spark-master-docker:latest
