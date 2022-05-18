@@ -153,7 +153,7 @@ RUN chmod a+rx ${SPARK_HOME}/jars/*.jar
 COPY ipython_kernel_config.py "/etc/ipython/"
 RUN fix-permissions "/etc/ipython/"
 
-USER ${NB_UID}
+
 
 #Install pyarrow
 RUN arch=$(uname -m) && \
@@ -169,6 +169,8 @@ RUN arch=$(uname -m) && \
     fix-permissions "/home/${NB_USER}"
 
 WORKDIR "${HOME}"
+
+USER ${NB_UID}
 
 # Should match the service
 EXPOSE 2222
