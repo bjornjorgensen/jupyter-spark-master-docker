@@ -66,6 +66,8 @@ RUN ./make-dist.sh --pip
 WORKDIR /opt/spark
 #USER ${NB_UID} 
 RUN pip install -e python
+RUN pip install --upgrade jupyterlab jupyterlab-git
+
 
 USER root
 # Based on the Spark dockerfile
@@ -84,7 +86,8 @@ USER root
 #    mv python /opt/spark/python
 
 RUN rm -rf /root/spark
-RUN rm -rf ~/.m2
+RUN rm -rf /root/.m2
+RUN rm -rf /root/.sbt
 
 ENV SPARK_HOME /opt/spark
 
