@@ -65,8 +65,8 @@ ENV MAVEN_HOME /usr/share/maven
 RUN ./make-dist.sh --pip
 WORKDIR /opt/spark
 #USER ${NB_UID} 
-RUN pip install -e python scalene
-RUN pip install --upgrade jupyterlab jupyterlab-git mpire 
+RUN pip install -e python  
+RUN pip install --upgrade jupyterlab jupyterlab-git mpire scalene 'black[jupyter]' xmltodict
 
 
 USER root
