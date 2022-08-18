@@ -167,7 +167,7 @@ RUN arch=$(uname -m) && \
         export G_SLICE=always-malloc; \
     fi && \
     mamba install --quiet --yes \
-    'pyarrow' && \
+    'pyarrow' 'hvplot' 'datashader' && \
     mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
