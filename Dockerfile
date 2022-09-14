@@ -66,7 +66,7 @@ RUN ./make-dist.sh --pip
 WORKDIR /opt/spark
 #USER ${NB_UID} 
 RUN pip install -e python  
-RUN pip install --upgrade jupyterlab-git scalene 'black[jupyter]' xmltodict jupyterlab-code-formatter isort python-dotenv
+RUN pip install --upgrade jupyterlab-git scalene 'black[jupyter]' xmltodict jupyterlab-code-formatter isort python-dotenv nbdev
 
 
 USER root
