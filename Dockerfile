@@ -133,6 +133,12 @@ ADD https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.3/hadoop-aws
 #    tar xzf "spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" -C /usr/local --owner root --group root --no-same-owner && \
 #    rm "spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz"
 
+# Add delta support 
+ADD https://repo1.maven.org/maven2/io/delta/delta-contribs_2.12/2.1.0/delta-contribs_2.12-2.1.0.jar ${SPARK_HOME}/jars/
+ADD https://repo1.maven.org/maven2/io/delta/delta-storage/2.1.0/delta-storage-2.1.0.jar ${SPARK_HOME}/jars/
+ADD https://repo1.maven.org/maven2/io/delta/delta-sharing-server_2.12/0.5.1/delta-sharing-server_2.12-0.5.1.jar ${SPARK_HOME}/jars/
+ADD https://repo1.maven.org/maven2/io/delta/delta-core_2.12/2.1.0/delta-core_2.12-2.1.0.jar ${SPARK_HOME}/jars/
+
 #WORKDIR /usr/local
 
 # Configure Spark
