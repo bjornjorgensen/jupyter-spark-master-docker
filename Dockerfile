@@ -46,19 +46,19 @@ RUN apt-get update --yes && \
  #   mkdir -p /opt/spark/work-dir
     #touch /opt/spark/RELEASE
 
-WORKDIR /root
+WORKDIR /tmp
 
 RUN git clone https://github.com/apache/spark.git
 
-WORKDIR /root/spark 
+WORKDIR /tmp/spark 
 
 #RUN export MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g"
 
 #RUN  ./build/mvn -DskipTests clean package && \
 #    ./dev/make-distribution.sh --name spark-master --pip
 
-ADD make-dist.sh /root/spark
-WORKDIR /root/spark
+ADD make-dist.sh /tmp/spark
+WORKDIR /tmp/spark
 RUN chmod a+x make-dist.sh
 ENV MAVEN_HOME /usr/share/maven
 #RUN ./build/mvn -DskipTests clean package 
@@ -85,9 +85,9 @@ USER root
 #    mv licenses /opt/spark/licenses && \
 #    mv python /opt/spark/python
 
-RUN rm -rf /root/spark
-RUN rm -rf /root/.m2
-RUN rm -rf /root/.sbt
+RUN rm -rf /tmp/spark
+RUN rm -rf /tmp/.m2
+RUN rm -rf /tmp/.sbt
 
 ENV SPARK_HOME /opt/spark
 
