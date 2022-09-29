@@ -29,7 +29,7 @@ set -e
 set -x
 
 # Figure out where the Spark framework is installed
-SPARK_HOME=/root/spark
+SPARK_HOME=/tmp/spark
 DISTDIR=/opt/spark
 
 MAKE_TGZ=false
