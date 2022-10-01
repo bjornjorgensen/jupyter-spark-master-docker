@@ -101,8 +101,8 @@ WORKDIR /opt/spark
 ENV SPARK_HOME /opt/spark
 
 RUN sonar-scanner \
-  -Dsonar.organization=bjornjorgensen \
-  -Dsonar.projectKey=bjornjorgensen_jupyter-spark-master-docker \
+  -Dsonar.organization=${{ secrets.org }} \
+  -Dsonar.projectKey=${{ secrets.projectKey }} \
   -Dsonar.sources=. \
   -Dsonar.host.url=https://sonarcloud.io
 
