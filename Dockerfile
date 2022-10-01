@@ -89,7 +89,22 @@ RUN rm -rf /tmp/spark
 RUN rm -rf /tmp/.m2
 RUN rm -rf /tmp/.sbt
 
+#sonarcloud
+ENV sonar=/usr/local/sonar
+WORKDIR ${sonar}
+RUN wget -qO "sonar-scanner.zip" https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip && \
+    unzip "sonar-scanner.zip"
+ENV PATH="${PATH}:${sonar}/sonar-scanner-4.7.0.2747-linux/bin"
+
+
+WORKDIR /opt/spark
 ENV SPARK_HOME /opt/spark
+
+RUN sonar-scanner \
+  -Dsonar.organization=bjornjorgensen \
+  -Dsonar.projectKey=bjornjorgensen_jupyter-spark-master-docker \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=https://sonarcloud.io
 
 RUN fix-permissions "${SPARK_HOME}"
 #    fix-permissions "/opt/spark/jars" && \
