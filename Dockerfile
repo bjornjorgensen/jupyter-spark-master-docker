@@ -104,7 +104,7 @@ RUN sonar-scanner \
   -Dsonar.organization=$org_secret \
   -Dsonar.projectKey=$projectKey_secret \
   -Dsonar.sources=/opt/spark/python \
-  -Dsonar.host.url=https://sonarcloud.io
+  -Dsonar.host.url="http://${SONARQUBE_URL}"
 
 RUN fix-permissions "${SPARK_HOME}"
 #    fix-permissions "/opt/spark/jars" && \

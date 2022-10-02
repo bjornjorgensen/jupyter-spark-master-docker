@@ -11,6 +11,7 @@ on:
 env:
   org_secret: ${{ secrets.org }}
   projectKey_secret: ${{ secrets.projectKey }}
+  SONARQUBE_URL: ${{ secrets.SONARQUBE_URL}}
 jobs:
   docker:
     runs-on: ubuntu-latest
