@@ -103,7 +103,7 @@ ENV SPARK_HOME /opt/spark
 RUN sonar-scanner \
   -Dsonar.organization=${{ secrets.org }} \
   -Dsonar.projectKey=${{ secrets.projectKey }} \
-  -Dsonar.sources=. \
+  -Dsonar.sources=/opt/spark/python \
   -Dsonar.host.url=https://sonarcloud.io
 
 RUN fix-permissions "${SPARK_HOME}"
