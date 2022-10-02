@@ -8,7 +8,9 @@ on:
   push:
     branches:
       - 'main'
-
+env:
+  org_secret: ${{ secrets.org }}
+  projectKey_secret: ${{ secrets.projectKey }}
 jobs:
   docker:
     runs-on: ubuntu-latest
