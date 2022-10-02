@@ -100,11 +100,13 @@ ENV PATH="${PATH}:${sonar}/sonar-scanner-4.7.0.2747-linux/bin"
 WORKDIR /opt/spark
 ENV SPARK_HOME /opt/spark
 
+ADD sonar-scanner.properties /usr/local/sonar/sonar-scanner-4.7.0.2747-linux/conf/
+
 RUN sonar-scanner \
   -Dsonar.organization=$org_secret \
   -Dsonar.projectKey=$projectKey_secret \
   -Dsonar.sources=/opt/spark/python \
-  -Dsonar.host.url="http://${SONARQUBE_URL}"
+  -Dsonar.host.url=https://sonarcloud.io
 
 RUN fix-permissions "${SPARK_HOME}"
 #    fix-permissions "/opt/spark/jars" && \
