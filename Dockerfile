@@ -102,9 +102,9 @@ ENV SPARK_HOME /opt/spark
 
 RUN rm /usr/local/sonar/sonar-scanner-4.7.0.2747-linux/conf/sonar-scanner.properties
 ADD sonar-scanner.properties /usr/local/sonar/sonar-scanner-4.7.0.2747-linux/conf/
-RUN cat /usr/local/sonar/sonar-scanner-4.7.0.2747-linux/conf/sonar-scanner.properties
+#RUN cat /usr/local/sonar/sonar-scanner-4.7.0.2747-linux/conf/sonar-scanner.properties
 
-RUN sonar-scanner -Dsonar.organization=$org_secret -Dsonar.projectKey=$projectKey_secret -Dsonar.sources=/opt/spark/python -Dsonar.host.url=https://sonarcloud.io
+#RUN sonar-scanner -Dsonar.organization=$org_secret -Dsonar.projectKey=$projectKey_secret -Dsonar.sources=/opt/spark/python -Dsonar.host.url=https://sonarcloud.io
 
 RUN fix-permissions "${SPARK_HOME}"
 #    fix-permissions "/opt/spark/jars" && \
