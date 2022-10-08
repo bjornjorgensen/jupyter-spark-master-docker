@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'first test'
 env:
   org_secret: ${{ secrets.org }}
   projectKey_secret: ${{ secrets.projectKey }}
