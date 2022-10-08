@@ -45,15 +45,13 @@ jobs:
         run: echo "NOW=$(date +'%d%m%Y')" >> $GITHUB_ENV    
       -
         name: install div
-        run: apt-get install --yes --no-install-recommends "openjdk-${openjdk_version}-jdk-headless" ca-certificates-java git maven wget python3
+        run: apt-get install --yes --no-install-recommends python3
       -
         name: clone spark master
         run: git clone https://github.com/apache/spark.git
       - 
         name: install sonar 
         run: ENV sonar=/usr/local/sonar && WORKDIR ${sonar} && wget -qO "sonar-scanner.zip" https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip && unzip "sonar-scanner.zip" && ENV PATH="${PATH}:${sonar}/sonar-scanner-4.7.0.2747-linux/bin"
-        # name: install mvn
-        # run:
       #- name: Build with Maven
         #run: mvn --batch-mode --update-snapshots package
         # name: copy spark
