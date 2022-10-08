@@ -8,7 +8,7 @@ on:
   push:
     branches:
       - 'main'
-      - 'first test'
+      - 'github-build'
 env:
   org_secret: ${{ secrets.org }}
   projectKey_secret: ${{ secrets.projectKey }}
