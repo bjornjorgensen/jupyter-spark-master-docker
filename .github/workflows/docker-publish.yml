@@ -44,14 +44,25 @@ jobs:
         name: set env
         run: echo "NOW=$(date +'%d%m%Y')" >> $GITHUB_ENV    
       -
-        name: install div
-        run: apt-get install --yes --no-install-recommends python3
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
       -
         name: clone spark master
         run: git clone https://github.com/apache/spark.git
       - 
         name: install sonar 
-        run: ENV sonar=/usr/local/sonar && WORKDIR ${sonar} && wget -qO "sonar-scanner.zip" https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip && unzip "sonar-scanner.zip" && ENV PATH="${PATH}:${sonar}/sonar-scanner-4.7.0.2747-linux/bin"
+        run: |
+          ENV sonar=/usr/local/sonar && WORKDIR ${sonar}
+          wget -qO "sonar-scanner.zip" https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
+          unzip "sonar-scanner.zip"
+          ENV PATH="${PATH}:${sonar}/sonar-scanner-4.7.0.2747-linux/bin"
       #- name: Build with Maven
         #run: mvn --batch-mode --update-snapshots package
         # name: copy spark
