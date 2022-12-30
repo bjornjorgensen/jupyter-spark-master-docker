@@ -91,18 +91,18 @@ RUN rm -rf /tmp/.m2
 RUN rm -rf /tmp/.sbt
 
 #sonarcloud
-ENV sonar=/usr/local/sonar
-WORKDIR ${sonar}
-RUN wget -qO "sonar-scanner.zip" https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip && \
-    unzip "sonar-scanner.zip"
-ENV PATH="${PATH}:${sonar}/sonar-scanner-4.7.0.2747-linux/bin"
+#ENV sonar=/usr/local/sonar
+#WORKDIR ${sonar}
+#RUN wget -qO "sonar-scanner.zip" https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip && \
+#    unzip "sonar-scanner.zip"
+#ENV PATH="${PATH}:${sonar}/sonar-scanner-4.7.0.2747-linux/bin"
 
 
 WORKDIR /opt/spark
 ENV SPARK_HOME /opt/spark
 
-RUN rm /usr/local/sonar/sonar-scanner-4.7.0.2747-linux/conf/sonar-scanner.properties
-ADD sonar-scanner.properties /usr/local/sonar/sonar-scanner-4.7.0.2747-linux/conf/
+#RUN rm /usr/local/sonar/sonar-scanner-4.7.0.2747-linux/conf/sonar-scanner.properties
+#ADD sonar-scanner.properties /usr/local/sonar/sonar-scanner-4.7.0.2747-linux/conf/
 #RUN cat /usr/local/sonar/sonar-scanner-4.7.0.2747-linux/conf/sonar-scanner.properties
 
 #RUN sonar-scanner -Dsonar.organization=$org_secret -Dsonar.projectKey=$projectKey_secret -Dsonar.sources=/opt/spark/python -Dsonar.host.url=https://sonarcloud.io
