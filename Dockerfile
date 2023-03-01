@@ -140,7 +140,7 @@ RUN chmod a+x /opt/decom.sh* || echo "No decom script present, assuming pre-3.1"
 #RUN fix-permissions "/home/${NB_USER}"
 
 # Add S3A support
-ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.312/aws-java-sdk-bundle-1.12.312.jar ${SPARK_HOME}/jars/
+ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.417/aws-java-sdk-bundle-1.12.417.jar ${SPARK_HOME}/jars/
 ADD https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar ${SPARK_HOME}/jars/
 # Spark installation
 #WORKDIR /tmp
