@@ -67,7 +67,7 @@ RUN ./make-dist.sh --pip
 WORKDIR /opt/spark
 #USER ${NB_UID} 
 RUN pip install -e python  
-RUN pip install --upgrade jupyterlab-git scalene 'black[jupyter]' xmltodict jupyterlab-code-formatter isort python-dotenv nbdev
+RUN pip install --upgrade 'black[jupyter]' xmltodict jupyterlab-code-formatter isort python-dotenv nbdev lxml
 
 
 USER root
@@ -140,7 +140,7 @@ RUN chmod a+x /opt/decom.sh* || echo "No decom script present, assuming pre-3.1"
 #RUN fix-permissions "/home/${NB_USER}"
 
 # Add S3A support
-ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.417/aws-java-sdk-bundle-1.12.417.jar ${SPARK_HOME}/jars/
+ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.472/aws-java-sdk-bundle-1.12.472.jar ${SPARK_HOME}/jars/
 ADD https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar ${SPARK_HOME}/jars/
 # Spark installation
 #WORKDIR /tmp
