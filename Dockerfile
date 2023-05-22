@@ -51,7 +51,7 @@ WORKDIR /tmp
 
 RUN git clone https://github.com/apache/spark.git && \
     cd spark && \
-    sed -i 's/<scala.maven.plugin.version>4.8.1<\/scala.maven.plugin.version>/<scala.maven.plugin.version>4.8.0<\/scala.maven.plugin.version>/' pom.xml
+    sed -i 's/<scala-maven-plugin.version>4.8.1<\/scala-maven-plugin.version>/<scala-maven-plugin.version>4.8.0<\/scala-maven-plugin.version>/' pom.xml
 
 WORKDIR /tmp/spark 
 
