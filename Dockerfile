@@ -69,8 +69,8 @@ WORKDIR /opt/spark
 RUN pip install -e python  
 RUN pip install --upgrade 'black[jupyter]' xmltodict jupyterlab-code-formatter isort python-dotenv nbdev lxml
 
-RUN git clone https://github.com/bjornjorgensen/spylon-kernel.git %% \
-    cd spylon-kernel %% \
+RUN git clone https://github.com/bjornjorgensen/spylon-kernel.git && \
+    cd /opt/spark/spylon-kernel && \
     pip install .
 
 USER root
