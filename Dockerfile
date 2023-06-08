@@ -71,8 +71,7 @@ RUN pip install --upgrade 'black[jupyter]' xmltodict jupyterlab-code-formatter i
 
 RUN git clone https://github.com/bjornjorgensen/spylon-kernel.git %% \
     cd spylon-kernel %% \
-    pip install . %% \
-    python -m spylon_kernel install
+    pip install .
 
 USER root
 # Based on the Spark dockerfile
