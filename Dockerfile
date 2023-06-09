@@ -73,6 +73,8 @@ RUN git clone https://github.com/bjornjorgensen/spylon-kernel.git && \
     cd /opt/spark/spylon-kernel && \
     pip install . && \
     python -m spylon_kernel install
+    
+WORKDIR /opt/spark
 
 USER root
 # Based on the Spark dockerfile
