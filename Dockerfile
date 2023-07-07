@@ -67,7 +67,7 @@ RUN ./make-dist.sh --pip
 WORKDIR /opt/spark
 #USER ${NB_UID} 
 RUN pip install -e python  
-RUN pip install --upgrade 'black[jupyter]' xmltodict jupyterlab-code-formatter isort python-dotenv nbdev lxml
+RUN pip install --upgrade 'black[jupyter]' xmltodict jupyterlab-code-formatter isort python-dotenv nbdev lxml pyspark-ai plotly
 
 RUN git clone https://github.com/bjornjorgensen/spylon-kernel.git && \
     cd /opt/spark/spylon-kernel && \
@@ -146,8 +146,8 @@ RUN chmod a+x /opt/decom.sh* || echo "No decom script present, assuming pre-3.1"
 #RUN fix-permissions "/home/${NB_USER}"
 
 # Add S3A support
-ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.472/aws-java-sdk-bundle-1.12.472.jar ${SPARK_HOME}/jars/
-ADD https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar ${SPARK_HOME}/jars/
+ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.503/aws-java-sdk-bundle-1.12.503.jar ${SPARK_HOME}/jars/
+ADD https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.6/hadoop-aws-3.3.6.jar ${SPARK_HOME}/jars/
 # Spark installation
 #WORKDIR /tmp
 #RUN wget -q "https://archive.apache.org/dist/spark/spark-${APACHE_SPARK_VERSION}/spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" && \
