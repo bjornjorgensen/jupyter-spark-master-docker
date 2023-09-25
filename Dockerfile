@@ -27,8 +27,8 @@ ARG openjdk_version="17"
 
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
-    "openjdk-${openjdk_version}-jdk-headless" \
-    "openjdk-${openjdk_version}-jre" \
+    "openjdk-${openjdk_version}-jdk" \
+    "openjdk-${openjdk_version}-jre-headless" \
     ca-certificates-java \
     git maven wget\
     python3 \
