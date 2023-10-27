@@ -67,7 +67,7 @@ RUN ./make-dist.sh --pip
 WORKDIR /opt/spark
 #USER ${NB_UID} 
 RUN pip install -e python  
-RUN pip install --upgrade 'black[jupyter]' xmltodict jupyterlab-code-formatter isort python-dotenv nbdev lxml jupyter_ai plotly pyspark-ai pygwalker
+RUN pip install --upgrade 'black[jupyter]' xmltodict jupyterlab-code-formatter isort python-dotenv nbdev lxml jupyter_ai plotly pyspark-ai pygwalker psycopg2-binary sqlalchemy
 
 RUN git clone https://github.com/bjornjorgensen/spylon-kernel.git && \
     cd /opt/spark/spylon-kernel && \
