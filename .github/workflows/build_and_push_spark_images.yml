@@ -36,7 +36,7 @@ jobs:
 
   spark-worker-and-driver:
     needs: spark-builder
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         component: [worker, driver]
