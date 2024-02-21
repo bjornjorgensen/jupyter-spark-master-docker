@@ -64,7 +64,6 @@ RUN pip install --no-cache-dir --upgrade \
         lxml \
         jupyter_ai \
         plotly \
-        pygwalker \
         psycopg2-binary \
         sqlalchemy \
         pyarrow \
