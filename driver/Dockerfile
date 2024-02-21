@@ -62,7 +62,6 @@ RUN pip install --no-cache-dir --upgrade \
         python-dotenv \
         nbdev \
         lxml \
-        jupyter_ai \
         plotly \
         psycopg2-binary \
         sqlalchemy \
