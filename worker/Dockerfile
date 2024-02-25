@@ -21,7 +21,7 @@ RUN apt-get update --yes && \
     net-tools \
     curl \
     bzip2 \
-    python3.12 \
+    python3 \
     python3-pip \
     procps && \
     rm /bin/sh && \

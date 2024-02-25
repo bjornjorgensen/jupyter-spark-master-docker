@@ -9,7 +9,7 @@ RUN apt-get update --yes && \
     "openjdk-${openjdk_version}-jdk" \
     "openjdk-${openjdk_version}-jre-headless" \
     ca-certificates-java \
-    git wget python3.12 python3-venv && \
+    git wget python3 python3-venv && \
     apt-get clean && rm -rf /var/lib/apt/lists/* 
 
 # Activate virtual environment
