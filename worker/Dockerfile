@@ -31,7 +31,7 @@ RUN apt-get update --yes && \
     rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/*
 
 # Install pandas using pip
-RUN python3 -m pip install --no-cache-dir --break-system-packages pandas pyarrow
+RUN python3 -m pip install --no-cache-dir --break-system-packages pandas==2.2.1 pyarrow
 
 
 # Spark installation

@@ -66,7 +66,7 @@ RUN pip install --no-cache-dir --upgrade \
         psycopg2-binary \
         sqlalchemy \
         pyarrow \
-        pandas
+        pandas==2.2.1
 
 
 USER root
