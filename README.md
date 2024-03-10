@@ -5,7 +5,7 @@ This project provides daily built Docker images designed for data science workfl
 
 - **Debian Testing**: Ensures a stable and up-to-date operating system environment.
 - **JupyterLab**: Offers an interactive development environment for data science projects.
-- **Apache Spark (master branch)**: Provides the latest features and improvements from the Apache Spark project.
+- **Apache Spark (master branch)**: Provides the latest features and improvements from the Apache Spark project. Only python and K8S package. 
 - **Pandas (latest Spark supported version)**: Includes the most recent enhancements and fixes from the Pandas library.
 
 ## How to Use
