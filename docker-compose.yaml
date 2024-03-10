@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  jupyter:
+    image: bjornjorgensen/spark-driver:latest
+    restart: 'no'
+    volumes:
+      - ./test_notebooks:/home/jovyan/notebooks
+    ports:
+      - "8888:8888"
+      - "4040:4040"
+    environment:
+      JUPYTER_TOKEN: "Password"
