@@ -66,6 +66,7 @@ RUN pip install --no-cache-dir --upgrade \
         psycopg2-binary \
         sqlalchemy \
         pyarrow \
+        flatterer \
         pandas==2.2.1
 
 
