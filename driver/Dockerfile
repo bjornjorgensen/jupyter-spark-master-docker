@@ -67,7 +67,7 @@ RUN pip install --no-cache-dir --upgrade \
         sqlalchemy \
         pyarrow \
         flatterer \
-        pandas==2.2.1
+        pandas==2.2.2
 
 
 USER root
