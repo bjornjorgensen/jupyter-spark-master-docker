@@ -6,7 +6,7 @@ USER root
 
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
-    "openjdk-${openjdk_version}-jdk" \
+    "openjdk-${openjdk_version}-jdk-headless" \
     "openjdk-${openjdk_version}-jre-headless" \
     ca-certificates-java \
     git wget python3 python3-venv && \

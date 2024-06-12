@@ -17,7 +17,7 @@ RUN apt-get update && \
     python3-venv \
     tini \
     procps \
-    "openjdk-${openjdk_version}-jdk" \
+    "openjdk-${openjdk_version}-jdk-headless" \
     ca-certificates-java && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
