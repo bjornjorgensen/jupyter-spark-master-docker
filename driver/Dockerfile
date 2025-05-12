@@ -1,10 +1,10 @@
-# Builder stage for Spark (Assuming this stage successfully builds your custom Spark)
+# Builder stage for Spark
 FROM bjornjorgensen/spark-builder AS builder
 
 # Our main image starts here
 FROM debian:testing
 
-# Set environment variables to non-interactive (to avoid prompts during package installation)
+# Set environment variables to non-interactive
 ENV DEBIAN_FRONTEND noninteractive
 
 # Define the OpenJDK version
@@ -90,9 +90,9 @@ ADD https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.608/aw
 ADD https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.6/hadoop-aws-3.3.6.jar ${SPARK_HOME}/jars/
 
 # Update the permissions for JARs - Readable by all, owned by root (Spark usually runs fine like this)
-# Also explicitly ensure jovyan user can read them just in case
+# Also explicitly ensure jovyan group can read them just in case
 RUN chmod a+r ${SPARK_HOME}/jars/*.jar && \
-    chown -R root:${NB_GID} ${SPARK_HOME}/jars
+    chown -R root:${NB_GID} ${SPARK_HOME}/jars # Keep owner root, but ensure jovyan group can read
 
 
 # --- Switch back to jovyan user to install PySpark into the venv ---
@@ -101,8 +101,8 @@ USER "${NB_USER}"
 ENV PATH="/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
 
 # Install PySpark using a STANDARD install from the local Spark directory
-# This avoids the issues encountered with the editable '-e' install.
-RUN pip install --no-cache-dir /opt/spark/python
+# Point pip to the directory containing setup.py <<< CORRECTED PATH HERE
+RUN pip install --no-cache-dir /opt/spark/python/packaging/classic
 
 # --- Final configuration steps ---
 
@@ -137,6 +137,4 @@ CMD ["jupyter-lab", "--ip=0.0.0.0", "--no-browser", "--allow-root"]
 # Note: Added --allow-root just in case entrypoint script or tini causes Jupyter to run as effective root initially.
 # If your entrypoint script correctly switches to jovyan before launching Jupyter, you might not need --allow-root.
 # Test without it first if preferred.
-
-
 
