@@ -31,19 +31,19 @@ RUN apt-get update --yes && \
     rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/*
 
 # Install pandas using pip
-RUN python3 -m pip install --no-cache-dir --break-system-packages pandas==2.2.2 pyarrow
+RUN python3 -m pip install --no-cache-dir --break-system-packages pandas==2.2.3 pyarrow
 
 
 # Spark installation
 WORKDIR /tmp
 
 
-COPY --from=builder /tmp/spark/spark-4.0.0-SNAPSHOT-bin-custom-spark.tgz /tmp/spark.tgz
+COPY --from=builder /tmp/spark/spark-4.1.0-SNAPSHOT-bin-custom-spark.tgz /tmp/spark.tgz
 
 RUN tar xzf "spark.tgz" -C /usr/local --owner root --group root --no-same-owner && \
   rm "spark.tgz"
 
-RUN mv /usr/local/spark-4.0.0-SNAPSHOT-bin-custom-spark /opt/spark
+RUN mv /usr/local/spark-4.1.0-SNAPSHOT-bin-custom-spark /opt/spark
 
 # Configure Spark paths
 ENV SPARK_HOME="/opt/spark"
