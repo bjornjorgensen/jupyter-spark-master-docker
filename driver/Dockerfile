@@ -5,7 +5,7 @@ FROM bjornjorgensen/spark-builder AS builder
 FROM debian:testing
 
 # Set environment variables to non-interactive (to avoid prompts during package installation)
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Define the OpenJDK version
 ARG openjdk_version="21"
@@ -33,8 +33,6 @@ RUN groupadd --gid "${NB_GID}" "${NB_USER}" && \
     mkdir -p "/home/${NB_USER}" && \
     chown -R "${NB_UID}:${NB_GID}" "/home/${NB_USER}"
 
-
-
 # As root user create the virtual environment
 RUN python3 -m venv /opt/venv && \
     chown -R ${NB_UID}:${NB_GID} /opt/venv
@@ -45,8 +43,6 @@ WORKDIR "/home/${NB_USER}"
 
 # Set the PATH to include the virtual environment's executables
 ENV PATH="/opt/venv/bin:${PATH}"
-
-
 
 # Install packages using pip in the virtual environment
 RUN pip install --no-cache-dir --upgrade \
@@ -71,10 +67,8 @@ RUN tar xzf /tmp/spark.tgz -C /usr/local && \
 ENV SPARK_HOME="/opt/spark"
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
-
-#USER "${NB_USER}"
-# Install PySpark from the local Spark directory
-RUN pip install -e /opt/spark/python/packaging/classic
+# Install PySpark directly without editable mode
+RUN pip install --no-cache-dir /opt/spark/python/packaging/classic/
 
 USER root
 # Add Jars for S3A support to the Spark Jars directory and update the permissions

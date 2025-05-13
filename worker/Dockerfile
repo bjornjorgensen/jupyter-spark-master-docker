@@ -7,7 +7,7 @@ USER root
 ARG openjdk_version="21"
 ARG spark_uid=185
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update --yes && \
     apt install -y "openjdk-${openjdk_version}-jdk-headless" \
     ca-certificates-java \
@@ -49,10 +49,9 @@ RUN tar xzf /tmp/spark.tgz -C /usr/local && \
 ENV SPARK_HOME="/opt/spark"
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
+# Install PySpark directly without editable mode
+RUN pip install --no-cache-dir --break-system-packages /opt/spark/python/packaging/classic/
 
-#USER "${NB_USER}"
-# Install PySpark from the local Spark directory
-RUN pip install -e /opt/spark/python/packaging/classic
 
 RUN ln -s "spark" "${SPARK_HOME}";
 
