@@ -101,10 +101,10 @@ USER "${NB_USER}"
 # Ensure PATH is set correctly for this user session
 ENV PATH="/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
 
-# Install PySpark from source with improved symlink handling
+# Install PySpark from source using the correct path to setup.py
 RUN mkdir -p /tmp/pyspark_build && \
-    cp -r ${SPARK_HOME}/python/* /tmp/pyspark_build/ && \
-    cd /tmp/pyspark_build && \
+    cp -r ${SPARK_HOME}/python /tmp/pyspark_build/ && \
+    cd /tmp/pyspark_build/python/packaging/classic && \
     python setup.py sdist && \
     pip install --no-cache-dir dist/*.tar.gz && \
     rm -rf /tmp/pyspark_build
