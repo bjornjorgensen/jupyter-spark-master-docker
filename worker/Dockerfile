@@ -31,7 +31,7 @@ RUN apt-get update --yes && \
     rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/*
 
 # Install pandas using pip
-RUN python3 -m pip install --no-cache-dir --break-system-packages pandas==2.2.3 pyarrow
+RUN python3 -m pip install --no-cache-dir --break-system-packages pandas pyarrow
 
 
 # Spark installation
@@ -51,7 +51,9 @@ ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
 
 # Install PySpark from the local Spark directory
-RUN python3 -m pip install --no-cache-dir --break-system-packages -e /opt/spark/python/packaging/classic
+# Modified approach to avoid symlink issues
+RUN cd /opt/spark/python && \
+    python3 -m pip install --no-cache-dir --break-system-packages .
 
 RUN ln -s "spark" "${SPARK_HOME}";
 
