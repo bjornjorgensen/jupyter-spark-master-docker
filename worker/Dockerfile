@@ -50,7 +50,8 @@ ENV SPARK_HOME="/opt/spark"
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
 # Install PySpark from source using the correct path to setup.py
-RUN mkdir -p /tmp/pyspark_build && \
+RUN python3 -m pip install --no-cache-dir --break-system-packages setuptools wheel && \
+    mkdir -p /tmp/pyspark_build && \
     cp -r /opt/spark/python /tmp/pyspark_build/ && \
     cd /tmp/pyspark_build/python/packaging/classic && \
     python3 setup.py sdist && \

@@ -102,7 +102,9 @@ USER "${NB_USER}"
 ENV PATH="/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
 
 # Install PySpark from source using the correct path to setup.py
-RUN mkdir -p /tmp/pyspark_build && \
+# (setuptools is already installed earlier in this file, but we'll ensure it's up-to-date)
+RUN pip install --no-cache-dir --upgrade setuptools wheel && \
+    mkdir -p /tmp/pyspark_build && \
     cp -r ${SPARK_HOME}/python /tmp/pyspark_build/ && \
     cd /tmp/pyspark_build/python/packaging/classic && \
     python setup.py sdist && \
