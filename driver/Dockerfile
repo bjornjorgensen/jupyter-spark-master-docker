@@ -92,7 +92,7 @@ ADD https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.6/hadoop-aws
 # Update the permissions for JARs - Readable by all, owned by root (Spark usually runs fine like this)
 # Also explicitly ensure jovyan group can read them just in case
 RUN chmod a+r ${SPARK_HOME}/jars/*.jar && \
-    chown -R root:${NB_GID} ${SPARK_HOME}/jars # Keep owner root, but ensure jovyan group can read
+    chown -R root:${NB_GID} ${SPARK_HOME}/jars
 
 
 # --- Switch back to jovyan user to install PySpark into the venv ---
@@ -100,12 +100,10 @@ USER "${NB_USER}"
 # Ensure PATH is set correctly for this user session
 ENV PATH="/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
 
-# Install PySpark using a copy approach to avoid symlink issues
-RUN mkdir -p /tmp/pyspark-install && \
-    cp -r /opt/spark/python/packaging/classic/* /tmp/pyspark-install/ && \
-    cd /tmp/pyspark-install && \
-    pip install --no-cache-dir . && \
-    rm -rf /tmp/pyspark-install
+# Install PySpark directly from the Spark's python directory
+# This ensures setup.py can access version files in the parent directories
+RUN cd /opt/spark/python && \
+    pip install --no-cache-dir .
 
 # --- Final configuration steps ---
 
