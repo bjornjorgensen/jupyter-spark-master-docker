@@ -50,9 +50,8 @@ ENV SPARK_HOME="/opt/spark"
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
 
-# Install PySpark from the correct directory where setup.py is located
-RUN cd /opt/spark/python/packaging/classic && \
-    pip install --no-cache-dir --break-system-packages .
+# Install PySpark directly from PyPI instead of from source to avoid symlink issues
+RUN pip install --no-cache-dir --break-system-packages pyspark==$(${SPARK_HOME}/bin/spark-submit --version 2>&1 | grep -m 1 'version' | sed 's/.*version //' | sed 's/\r//g')
 
 RUN ln -s "spark" "${SPARK_HOME}";
 
