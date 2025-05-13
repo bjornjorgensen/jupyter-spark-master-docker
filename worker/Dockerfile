@@ -49,12 +49,10 @@ RUN mv /usr/local/spark-4.1.0-SNAPSHOT-bin-custom-spark /opt/spark
 ENV SPARK_HOME="/opt/spark"
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
-
-# Install PySpark from local source - properly handling symlink issues
-RUN cd /opt/spark && \
-    cp -r python /tmp/pyspark_src && \
-    cd /tmp/pyspark_src/packaging/classic && \
-    python3 -m pip install --no-cache-dir --break-system-packages .
+# Install PySpark from source following the official guidance
+RUN cd /opt/spark/python && \
+    python3 packaging/classic/setup.py sdist && \
+    python3 -m pip install --no-cache-dir --break-system-packages dist/*.tar.gz
 
 RUN ln -s "spark" "${SPARK_HOME}";
 

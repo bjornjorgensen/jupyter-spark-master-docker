@@ -101,12 +101,10 @@ USER "${NB_USER}"
 # Ensure PATH is set correctly for this user session
 ENV PATH="/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
 
-# Install PySpark from local source - properly handling symlink issues
-RUN cd ${SPARK_HOME} && \
-    cp -r python /tmp/pyspark_src && \
-    cd /tmp/pyspark_src/packaging/classic && \
-    pip install --no-cache-dir .
-
+# Install PySpark from source following the official guidance
+RUN cd ${SPARK_HOME}/python && \
+    python packaging/classic/setup.py sdist && \
+    pip install --no-cache-dir dist/*.tar.gz
 
 # --- Final configuration steps ---
 
