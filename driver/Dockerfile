@@ -100,10 +100,12 @@ USER "${NB_USER}"
 # Ensure PATH is set correctly for this user session
 ENV PATH="/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
 
-# Install PySpark from the correct path in the Spark distribution
-# The setup.py is located at python/packaging/classic/setup.py
-RUN cd /opt/spark/python/packaging/classic && \
-    pip install --no-cache-dir .
+# Install PySpark using a copy approach to avoid symlink issues
+RUN mkdir -p /tmp/pyspark-install && \
+    cp -r /opt/spark/python/packaging/classic/* /tmp/pyspark-install/ && \
+    cd /tmp/pyspark-install && \
+    pip install --no-cache-dir . && \
+    rm -rf /tmp/pyspark-install
 
 # --- Final configuration steps ---
 
