@@ -101,8 +101,10 @@ USER "${NB_USER}"
 ENV PATH="/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
 
 # Install PySpark from the local Spark directory
-# Modified approach to avoid symlink issues
-RUN cd /opt/spark/python && \
+# First explore the directory structure to find installation files
+RUN find /opt/spark/python -name "setup.py" | grep -v "__pycache__"
+# Then install from the correct directory
+RUN cd /opt/spark/python/packaging/classic && \
     pip install --no-cache-dir .
 
 # --- Final configuration steps ---
