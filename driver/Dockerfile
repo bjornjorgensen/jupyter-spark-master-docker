@@ -72,15 +72,15 @@ RUN pip install --no-cache-dir --upgrade \
 USER root
 
 # Copy the Spark distribution from the builder stage
-COPY --from=builder /tmp/spark/spark-4.1.0-SNAPSHOT-bin-custom-spark.tgz /tmp/spark.tgz
+COPY --from=builder /tmp/spark/spark-4.1.0-SNAPSHOT-bin-custom-spark.tgz /spark.tgz
 
-# Unpack Spark, move it to /opt/spark, and remove the tarball
-RUN tar xzf /tmp/spark.tgz -C /usr/local && \
-    rm /tmp/spark.tgz && \
-    mv /usr/local/spark-4.1.0-SNAPSHOT-bin-custom-spark /opt/spark
+# Unpack Spark, move it to /spark, and remove the tarball
+RUN tar xzf /spark.tgz -C /local && \
+    rm /spark.tgz && \
+    mv /local/spark-4.1.0-SNAPSHOT-bin-custom-spark /spark
 
 # Configure Spark paths globally
-ENV SPARK_HOME="/opt/spark"
+ENV SPARK_HOME="/spark"
 # Update PATH globally to include Spark binaries *and* ensure venv is still prioritized if user switches back
 ENV PATH="/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
 
@@ -100,9 +100,8 @@ USER "${NB_USER}"
 # Ensure PATH is set correctly for this user session
 ENV PATH="/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
 
-# Install PySpark directly from the Spark's python directory
-# This ensures setup.py can access version files in the parent directories
-RUN cd /opt/spark/python && \
+# Install PySpark using the same approach as the worker Dockerfile
+RUN cd ${SPARK_HOME}/python && \
     pip install --no-cache-dir .
 
 # --- Final configuration steps ---
@@ -122,9 +121,9 @@ RUN chmod +x /docker-entrypoint.sh
 
 # Optional: Grant write permissions to Spark's default work-dir if needed by applications run by jovyan
 # Ensure the directory exists first
-RUN mkdir -p /opt/spark/work-dir && \
-    chown ${NB_USER}:${NB_GID} /opt/spark/work-dir && \
-    chmod g+w /opt/spark/work-dir
+RUN mkdir -p ${SPARK_HOME}/work-dir && \
+    chown ${NB_USER}:${NB_GID} ${SPARK_HOME}/work-dir && \
+    chmod g+w ${SPARK_HOME}/work-dir
 
 # Switch back to jovyan user for the runtime environment
 USER "${NB_USER}"
