@@ -74,8 +74,9 @@ USER root
 # Copy the Spark distribution from the builder stage
 COPY --from=builder /tmp/spark/spark-4.1.0-SNAPSHOT-bin-custom-spark.tgz /spark.tgz
 
-# Unpack Spark, move it to /spark, and remove the tarball
-RUN tar xzf /spark.tgz -C /local && \
+# Create directory first and then unpack Spark
+RUN mkdir -p /local && \
+    tar xzf /spark.tgz -C /local && \
     rm /spark.tgz && \
     mv /local/spark-4.1.0-SNAPSHOT-bin-custom-spark /spark
 
@@ -100,8 +101,8 @@ USER "${NB_USER}"
 # Ensure PATH is set correctly for this user session
 ENV PATH="/opt/venv/bin:${SPARK_HOME}/bin:${PATH}"
 
-# Install PySpark using the same approach as the worker Dockerfile
-RUN cd ${SPARK_HOME}/python && \
+# Install PySpark from the correct directory where setup.py is located
+RUN cd ${SPARK_HOME}/python/packaging/classic && \
     pip install --no-cache-dir .
 
 # --- Final configuration steps ---
