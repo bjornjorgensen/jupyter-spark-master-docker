@@ -4,7 +4,7 @@ FROM debian:testing
 
 USER root
 
-ARG openjdk_version="21"
+ARG openjdk_version="24"
 ARG spark_uid=185
 
 ENV DEBIAN_FRONTEND=noninteractive

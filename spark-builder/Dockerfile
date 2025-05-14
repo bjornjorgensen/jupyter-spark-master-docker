@@ -1,6 +1,6 @@
 FROM bjornjorgensen/dep-builder
 
-ARG openjdk_version="21"
+ARG openjdk_version="24"
 
 USER root
 
