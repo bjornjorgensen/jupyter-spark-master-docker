@@ -1,6 +1,6 @@
 FROM debian:testing AS dep-builder
 
-ARG openjdk_version="25"
+ARG openjdk_version="21"
 
 USER root
 
