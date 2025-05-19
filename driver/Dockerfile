@@ -51,6 +51,8 @@ RUN pip install --no-cache-dir --upgrade \
         wheel && \
     pip install --no-cache-dir \
         jupyterlab \
+        "marimo[recommended]" \
+        google-generativeai \
         pandas
 
 
