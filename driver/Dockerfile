@@ -18,9 +18,9 @@ RUN apt-get update && \
     tini \
     procps \
     "openjdk-${openjdk_version}-jdk-headless" \
-    ca-certificates-java && \
     nodejs \
     npm \
+    ca-certificates-java && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
