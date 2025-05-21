@@ -19,6 +19,8 @@ RUN apt-get update && \
     procps \
     "openjdk-${openjdk_version}-jdk-headless" \
     ca-certificates-java && \
+    nodejs \
+    npm \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
