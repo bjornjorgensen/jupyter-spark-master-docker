@@ -55,6 +55,7 @@ RUN pip install --no-cache-dir --upgrade \
         jupyterlab \
         "marimo[recommended]" \
         google-generativeai \
+        psycopg2-binary \
         pandas
 
 
