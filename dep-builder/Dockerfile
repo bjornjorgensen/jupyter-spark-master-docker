@@ -18,7 +18,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 # Install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.cargo/bin:$PATH"
+ENV PATH="/root/.local/bin:$PATH"
 
 # Now use uv to install packages
 RUN uv pip install --upgrade pip setuptools

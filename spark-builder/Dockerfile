@@ -12,6 +12,10 @@ RUN apt-get update --yes && \
     git wget python3 python3-venv && \
     apt-get clean && rm -rf /var/lib/apt/lists/* 
 
+# Install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
+
 # Activate virtual environment
 #ENV PATH="/opt/venv/bin:$PATH"
 
