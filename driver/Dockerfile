@@ -46,12 +46,16 @@ WORKDIR "/home/${NB_USER}"
 # Set the PATH to include the virtual environment's executables
 ENV PATH="/opt/venv/bin:${PATH}"
 
-# Install packages using pip in the virtual environment
-RUN pip install --no-cache-dir --upgrade \
+# Install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/home/${NB_USER}/.cargo/bin:${PATH}"
+
+# Install packages using uv in the virtual environment
+RUN uv pip install --upgrade \
         pip \
         setuptools \
         wheel && \
-    pip install --no-cache-dir \
+    uv pip install \
         jupyterlab \
         "marimo[recommended]" \
         google-generativeai \
@@ -73,7 +77,7 @@ ENV SPARK_HOME="/opt/spark"
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
 # Install PySpark directly without editable mode
-RUN pip install --no-cache-dir /opt/spark/python/packaging/classic/
+RUN uv pip install --system /opt/spark/python/packaging/classic/
 
 USER root
 # Add Jars for S3A support to the Spark Jars directory and update the permissions

@@ -30,8 +30,12 @@ RUN apt-get update --yes && \
     chgrp root /etc/passwd && chmod ug+rw /etc/passwd && \
     rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/*
 
-# Install pandas using pip
-RUN python3 -m pip install --no-cache-dir --break-system-packages pandas pyarrow
+# Install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.cargo/bin:$PATH"
+
+# Install pandas using uv
+RUN uv pip install --system pandas pyarrow
 
 
 # Spark installation
@@ -50,7 +54,7 @@ ENV SPARK_HOME="/opt/spark"
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
 # Install PySpark directly without editable mode
-RUN pip install --no-cache-dir --break-system-packages /opt/spark/python/packaging/classic/
+RUN uv pip install --system /opt/spark/python/packaging/classic/
 
 
 RUN ln -s "spark" "${SPARK_HOME}";
