@@ -9,20 +9,12 @@ RUN apt-get update --yes && \
     "openjdk-${openjdk_version}-jdk-headless" \
     "openjdk-${openjdk_version}-jre-headless" \
     ca-certificates-java \
-    git wget python3 python3-venv && \
+    git wget python3 curl && \
     apt-get clean && rm -rf /var/lib/apt/lists/* 
 
 # Install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
-
-# Activate virtual environment
-#ENV PATH="/opt/venv/bin:$PATH"
-
-# Now use pip to install packages
-#RUN pip install --upgrade pip setuptools
-
-
 
 WORKDIR /tmp/
 

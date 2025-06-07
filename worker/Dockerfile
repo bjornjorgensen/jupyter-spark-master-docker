@@ -22,7 +22,6 @@ RUN apt-get update --yes && \
     curl \
     bzip2 \
     python3 \
-    python3-pip \
     procps && \
     rm /bin/sh && \
     ln -sv /bin/bash /bin/sh && \
@@ -35,7 +34,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # Install pandas using uv
-RUN uv pip install --system pandas pyarrow
+RUN uv pip install --system --break-system-packages pandas pyarrow
 
 
 # Spark installation
@@ -54,7 +53,7 @@ ENV SPARK_HOME="/opt/spark"
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
 # Install PySpark directly without editable mode
-RUN uv pip install --system /opt/spark/python/packaging/classic/
+RUN uv pip install --system --break-system-packages /opt/spark/python/packaging/classic/
 
 
 RUN ln -s "spark" "${SPARK_HOME}";
@@ -78,4 +77,5 @@ RUN chmod a+x /opt/decom.sh
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 
 # Specify the User that the actual main process will run as
+USER ${spark_uid}
 USER ${spark_uid}

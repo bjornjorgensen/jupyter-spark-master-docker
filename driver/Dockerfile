@@ -14,13 +14,13 @@ ARG openjdk_version="21"
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     python3 \
-    python3-venv \
     tini \
     procps \
     "openjdk-${openjdk_version}-jdk-headless" \
     nodejs \
     npm \
-    ca-certificates-java && \
+    ca-certificates-java \
+    curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -35,8 +35,13 @@ RUN groupadd --gid "${NB_GID}" "${NB_USER}" && \
     mkdir -p "/home/${NB_USER}" && \
     chown -R "${NB_UID}:${NB_GID}" "/home/${NB_USER}"
 
-# As root user create the virtual environment
-RUN python3 -m venv /opt/venv && \
+# Install uv as root
+USER root
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
+
+# Create virtual environment using uv
+RUN uv venv /opt/venv && \
     chown -R ${NB_UID}:${NB_GID} /opt/venv
 
 # Switch to the jovyan user
@@ -46,22 +51,13 @@ WORKDIR "/home/${NB_USER}"
 # Set the PATH to include the virtual environment's executables
 ENV PATH="/opt/venv/bin:${PATH}"
 
-# Install uv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/home/${NB_USER}/.local/bin:${PATH}"
-
 # Install packages using uv in the virtual environment
-RUN uv pip install --upgrade \
-        pip \
-        setuptools \
-        wheel && \
-    uv pip install \
+RUN uv pip install \
         jupyterlab \
         "marimo[recommended]" \
         google-generativeai \
         psycopg2-binary \
         pandas
-
 
 USER root
 # Copy the Spark distribution from the builder stage
@@ -77,7 +73,7 @@ ENV SPARK_HOME="/opt/spark"
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
 # Install PySpark directly without editable mode
-RUN uv pip install --system /opt/spark/python/packaging/classic/
+RUN uv pip install --break-system-packages /opt/spark/python/packaging/classic/
 
 USER root
 # Add Jars for S3A support to the Spark Jars directory and update the permissions
