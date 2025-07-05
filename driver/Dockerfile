@@ -58,7 +58,8 @@ RUN uv pip install \
         "marimo[recommended]" \
         google-generativeai \
         psycopg2-binary \
-        pandas
+        pandas \
+        openpyxl
 
 USER root
 # Copy the Spark distribution from the builder stage
