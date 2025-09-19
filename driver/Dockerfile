@@ -8,7 +8,7 @@ FROM debian:testing
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Define the OpenJDK version
-ARG openjdk_version="21"
+ARG openjdk_version="25"
 
 # Update the package lists, install Python 3.11, tini, OpenJDK, and required certificates
 RUN apt-get update && \
