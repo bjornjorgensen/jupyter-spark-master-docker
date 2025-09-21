@@ -57,7 +57,7 @@ The project currently uses these GitHub Actions:
 | `docker/setup-buildx-action` | Set up Docker Buildx | `v3` |
 | `docker/login-action` | Login to Docker registry | `v3` |
 | `docker/build-push-action` | Build and push Docker images | `v6` |
-| `actions/github-script` | Run JavaScript in workflows | `v7` |
+| `actions/github-script` | Run JavaScript in workflows | `v8` |
 
 ## Manual Update Process
 
