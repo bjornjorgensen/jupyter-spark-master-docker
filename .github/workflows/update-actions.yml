@@ -1,4 +1,4 @@
-name: Update GitHub Actions
+name: Action Version Check
 
 on:
   schedule:
@@ -7,47 +7,46 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
+  issues: write
 
 jobs:
-  update-actions:
+  scan-actions:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/checkout@v4
 
-      - name: Update GitHub Actions versions
-        uses: nickderobertis/action-update-action-versions@v1
-        with:
-          # Create a PR with the updates
-          create-pull-request: true
-          # PR configuration
-          pr-title: 'Update GitHub Actions to latest versions'
-          pr-body: |
-            🤖 **Automated GitHub Actions Update**
-            
-            This PR updates GitHub Actions to their latest versions for security and feature improvements.
-            
-            ### Changes Made:
-            - Updated action versions to latest releases
-            - Maintained compatibility with existing workflows
-            
-            ### Review Checklist:
-            - [ ] All workflow files syntax is valid
-            - [ ] No breaking changes in updated actions
-            - [ ] Test workflows run successfully
-            
-            **Note**: This PR was created automatically. Please review the changes before merging.
-          pr-branch: 'update-github-actions'
-          # Only update these specific actions (optional - remove to update all)
-          actions-to-update: |
-            actions/checkout
-            docker/setup-qemu-action
-            docker/setup-buildx-action
-            docker/login-action
-            docker/build-push-action
+      - name: Scan workflow files for actions
+        id: scan
+        run: |
+          echo "Scanning workflow files for GitHub Actions..."
+          
+          # Create a summary of all actions found
+          echo "## Actions Found in Workflows" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Action | Current Version |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|-----------------|" >> $GITHUB_STEP_SUMMARY
+          
+          # Find all workflow files and extract actions
+          find .github/workflows -name "*.yml" -o -name "*.yaml" | while read file; do
+            echo "Scanning: $file"
+            grep -n "uses:" "$file" | while read line; do
+              if [[ $line == *"@"* ]] && [[ $line != *"./"* ]]; then
+                action_full=$(echo "$line" | sed 's/.*uses: *//; s/ *$//' | tr -d '"')
+                action_name=$(echo "$action_full" | cut -d@ -f1)
+                action_version=$(echo "$action_full" | cut -d@ -f2)
+                filename=$(basename "$file")
+                echo "| $filename | \`$action_name\` | \`$action_version\` |" >> $GITHUB_STEP_SUMMARY
+              fi
+            done
+          done
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Check each action's repository for newer versions" >> $GITHUB_STEP_SUMMARY
+          echo "2. Review changelogs for breaking changes" >> $GITHUB_STEP_SUMMARY
+          echo "3. Update versions manually after testing" >> $GITHUB_STEP_SUMMARY
+          echo "4. Dependabot will also create PRs automatically" >> $GITHUB_STEP_SUMMARY
 
   check-action-versions:
     runs-on: ubuntu-latest
@@ -90,60 +89,68 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const title = '🔄 Weekly GitHub Actions Version Check';
-            const body = `
-            ## Weekly GitHub Actions Version Check
-            
-            This is an automated check to remind you to review GitHub Actions versions.
-            
-            ### Current Actions in Use:
-            
-            **Main Build Workflow:**
-            - \`actions/checkout@v5\`
-            - \`docker/setup-qemu-action@v3\`
-            - \`docker/setup-buildx-action@v3\`
-            - \`docker/login-action@v3\`
-            - \`docker/build-push-action@v6\`
-            
-            ### Recommended Actions:
-            
-            1. **Check for updates**: Visit each action's repository to see if newer versions are available
-            2. **Review changelogs**: Check for breaking changes or security fixes
-            3. **Test updates**: Update versions in a separate branch and test workflows
-            4. **Update workflow files**: Apply updates after testing
-            
-            ### Useful Resources:
-            
-            - [GitHub Actions Marketplace](https://github.com/marketplace?type=actions)
-            - [Action Version Updates Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)
-            
-            ---
-            
-            *This issue was created automatically and can be closed after review.*
-            `;
+            const date = new Date().toISOString().split('T')[0];
+            const title = `🔄 Weekly GitHub Actions Version Check - ${date}`;
             
             // Check if similar issue already exists
             const existingIssues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              labels: 'automation,github-actions'
+              labels: 'github-actions'
             });
             
             const hasExistingIssue = existingIssues.data.some(issue => 
               issue.title.includes('Weekly GitHub Actions Version Check')
             );
             
-            if (!hasExistingIssue) {
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: title,
-                body: body,
-                labels: ['automation', 'github-actions', 'maintenance']
-              });
-              
-              console.log('Created issue for GitHub Actions version check');
-            } else {
+            if (hasExistingIssue) {
               console.log('Similar issue already exists, skipping creation');
+              return;
             }
+            
+            const body = [
+              '## Weekly GitHub Actions Version Check',
+              '',
+              'This is an automated reminder to check for GitHub Actions updates.',
+              '',
+              '### Current Actions in Use:',
+              '',
+              '- `actions/checkout@v4` - [Releases](https://github.com/actions/checkout/releases)',
+              '- `docker/setup-qemu-action@v3` - [Releases](https://github.com/docker/setup-qemu-action/releases)',
+              '- `docker/setup-buildx-action@v3` - [Releases](https://github.com/docker/setup-buildx-action/releases)',
+              '- `docker/login-action@v3` - [Releases](https://github.com/docker/login-action/releases)',
+              '- `docker/build-push-action@v6` - [Releases](https://github.com/docker/build-push-action/releases)',
+              '- `actions/github-script@v7` - [Releases](https://github.com/actions/github-script/releases)',
+              '',
+              '### Update Process:',
+              '',
+              '1. **Check releases**: Click the links above to see if newer versions are available',
+              '2. **Review changelogs**: Look for breaking changes or security fixes',
+              '3. **Test updates**: Update versions in a test branch first',
+              '4. **Apply updates**: Update workflow files after testing',
+              '',
+              '### Automation:',
+              '',
+              '✅ Dependabot is configured to create PRs automatically',
+              '📊 Workflow summaries show current action versions',
+              '',
+              '### Resources:',
+              '',
+              '- [GitHub Actions Marketplace](https://github.com/marketplace?type=actions)',
+              '- [Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)',
+              '',
+              '---',
+              '',
+              '*Close this issue after reviewing. A new one will be created next week.*'
+            ].join('\n');
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['github-actions', 'maintenance', 'weekly-check']
+            });
+            
+            console.log('Created weekly GitHub Actions version check issue');
