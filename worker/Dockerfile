@@ -9,7 +9,7 @@ ARG spark_uid=185
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update --yes && \
-    apt install -y --no-install-recommends "openjdk-${openjdk_version}-jdk-headless" \
+    apt-get install -y --no-install-recommends "openjdk-${openjdk_version}-jdk-headless" \
     ca-certificates-java \
     bash \
     tini \

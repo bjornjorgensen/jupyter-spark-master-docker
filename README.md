@@ -37,10 +37,9 @@ This project provides daily-built Docker images designed for distributed data sc
 ## 🏗️ Architecture
 
 ### Multi-Stage Build System
-- **spark-builder**: Compiles Apache Spark from master branch
-- **spark-driver**: JupyterLab + Spark driver for interactive development  
-- **spark-worker**: Lightweight Spark executors for distributed processing
-- **dep-builder**: Base dependency layer with optimized Python packages
+- **spark-builder**: Base image that compiles Apache Spark from source with all dependencies (`spark-builder/Dockerfile`)
+- **spark-driver**: JupyterLab-enabled container for interactive development (`driver/Dockerfile`) 
+- **spark-worker**: Lightweight Spark executor nodes for distributed processing (`worker/Dockerfile`)
 
 ### Key Technologies
 - **OS**: Debian Testing (rolling release)

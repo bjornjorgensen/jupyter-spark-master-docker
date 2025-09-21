@@ -36,10 +36,10 @@ RUN groupadd --gid "${NB_GID}" "${NB_USER}" && \
     mkdir -p "/home/${NB_USER}" && \
     chown -R "${NB_UID}:${NB_GID}" "/home/${NB_USER}"
 
-# Install uv as root and setup virtual environment in single layer
+# Install uv and setup virtual environment
 USER root
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    # Move uv to system-wide location
+    # Move uv to system-wide location for easier access
     mv /root/.local/bin/uv /usr/local/bin/uv && \
     # Create virtual environment using uv
     uv venv /opt/venv && \

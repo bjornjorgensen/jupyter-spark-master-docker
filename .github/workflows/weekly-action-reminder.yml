@@ -9,8 +9,8 @@ jobs:
   create-reminder:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
 
       - name: Create update reminder issue
         uses: actions/github-script@v7
@@ -43,7 +43,7 @@ jobs:
 
             ### Current Actions:
 
-            - \`actions/checkout@v4\` - [Repository](https://github.com/actions/checkout) | [Releases](https://github.com/actions/checkout/releases)
+            - \`actions/checkout@v5\` - [Repository](https://github.com/actions/checkout) | [Releases](https://github.com/actions/checkout/releases)
             - \`docker/setup-qemu-action@v3\` - [Repository](https://github.com/docker/setup-qemu-action) | [Releases](https://github.com/docker/setup-qemu-action/releases)
             - \`docker/setup-buildx-action@v3\` - [Repository](https://github.com/docker/setup-buildx-action) | [Releases](https://github.com/docker/setup-buildx-action/releases)
             - \`docker/login-action@v3\` - [Repository](https://github.com/docker/login-action) | [Releases](https://github.com/docker/login-action/releases)

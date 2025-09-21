@@ -7,10 +7,9 @@ This project builds daily Docker images for distributed data science workflows, 
 ## Architecture Components
 
 ### Multi-Stage Docker Build System
-- **spark-builder**: Base image that compiles Apache Spark from source (`spark-builder/Dockerfile`)
+- **spark-builder**: Self-contained base image that compiles Apache Spark from source with all dependencies (`spark-builder/Dockerfile`)
 - **spark-driver**: JupyterLab-enabled container for interactive development (`driver/Dockerfile`) 
 - **spark-worker**: Lightweight Spark executor nodes for distributed processing (`worker/Dockerfile`)
-- **dep-builder**: Base dependency layer (referenced but not in this repo)
 
 ### Key Build Dependencies
 - Uses `uv` package manager instead of pip for faster Python dependency resolution

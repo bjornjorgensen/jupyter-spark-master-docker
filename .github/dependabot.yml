@@ -72,17 +72,3 @@ updates:
       prefix: "docker"
       include: "scope"
 
-  - package-ecosystem: "docker"
-    directory: "/dep-builder"
-    schedule:
-      interval: "weekly"
-      day: "tuesday"
-      time: "09:00"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "bjornjorgensen"
-    assignees:
-      - "bjornjorgensen"
-    commit-message:
-      prefix: "docker"
-      include: "scope"
