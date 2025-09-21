@@ -9,7 +9,7 @@ ARG spark_uid=185
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update --yes && \
-    apt install -y "openjdk-${openjdk_version}-jdk-headless" \
+    apt install -y --no-install-recommends "openjdk-${openjdk_version}-jdk-headless" \
     ca-certificates-java \
     bash \
     tini \
@@ -22,19 +22,21 @@ RUN apt-get update --yes && \
     curl \
     bzip2 \
     python3 \
-    procps && \
+    python3-venv && \
+    # Install uv and packages in same layer
+    curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    # Install pandas using uv
+    /root/.local/bin/uv pip install --system --break-system-packages pandas pyarrow && \
+    # Configure shell and permissions
     rm /bin/sh && \
     ln -sv /bin/bash /bin/sh && \
     echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
     chgrp root /etc/passwd && chmod ug+rw /etc/passwd && \
-    rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/*
+    # Clean up in same layer
+    apt-get clean && \
+    rm -rf /var/cache/apt/* /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Install uv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
-
-# Install pandas using uv
-RUN uv pip install --system --break-system-packages pandas pyarrow
 
 
 # Spark installation
@@ -77,5 +79,4 @@ RUN chmod a+x /opt/decom.sh
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 
 # Specify the User that the actual main process will run as
-USER ${spark_uid}
 USER ${spark_uid}

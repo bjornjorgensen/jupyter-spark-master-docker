@@ -14,6 +14,7 @@ ARG openjdk_version="25"
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     python3 \
+    python3-venv \
     tini \
     procps \
     "openjdk-${openjdk_version}-jdk-headless" \
@@ -22,7 +23,7 @@ RUN apt-get update && \
     ca-certificates-java \
     curl && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Define default environment variables for user 'jovyan'
 ARG NB_USER="jovyan"
@@ -35,15 +36,16 @@ RUN groupadd --gid "${NB_GID}" "${NB_USER}" && \
     mkdir -p "/home/${NB_USER}" && \
     chown -R "${NB_UID}:${NB_GID}" "/home/${NB_USER}"
 
-# Install uv as root
+# Install uv as root and setup virtual environment in single layer
 USER root
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-# Move uv to system-wide location
-RUN mv /root/.local/bin/uv /usr/local/bin/uv
-
-# Create virtual environment using uv
-RUN uv venv /opt/venv && \
-    chown -R ${NB_UID}:${NB_GID} /opt/venv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    # Move uv to system-wide location
+    mv /root/.local/bin/uv /usr/local/bin/uv && \
+    # Create virtual environment using uv
+    uv venv /opt/venv && \
+    chown -R ${NB_UID}:${NB_GID} /opt/venv && \
+    # Clean up installation artifacts
+    rm -rf /tmp/* /var/tmp/*
 
 # Switch to the jovyan user
 USER "${NB_USER}"

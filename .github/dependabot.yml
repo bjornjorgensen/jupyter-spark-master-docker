@@ -1,0 +1,88 @@
+version: 2
+
+updates:
+  # GitHub Actions updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    # Automatically merge minor and patch updates
+    open-pull-requests-limit: 10
+    reviewers:
+      - "bjornjorgensen"
+    assignees:
+      - "bjornjorgensen"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    # Group related updates
+    groups:
+      docker-actions:
+        patterns:
+          - "docker/*"
+      github-actions:
+        patterns:
+          - "actions/*"
+
+  # Docker base image updates (if you want to track base images)
+  - package-ecosystem: "docker" 
+    directory: "/spark-builder"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "bjornjorgensen"
+    assignees:  
+      - "bjornjorgensen"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+
+  - package-ecosystem: "docker"
+    directory: "/driver"
+    schedule:
+      interval: "weekly" 
+      day: "tuesday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "bjornjorgensen"
+    assignees:
+      - "bjornjorgensen"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+
+  - package-ecosystem: "docker"
+    directory: "/worker"
+    schedule:
+      interval: "weekly"
+      day: "tuesday" 
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "bjornjorgensen"
+    assignees:
+      - "bjornjorgensen"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+
+  - package-ecosystem: "docker"
+    directory: "/dep-builder"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "bjornjorgensen"
+    assignees:
+      - "bjornjorgensen"
+    commit-message:
+      prefix: "docker"
+      include: "scope"

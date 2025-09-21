@@ -1,6 +1,24 @@
-# Overview
+# Jupyter Spark Master Docker
 
-This project provides daily built Docker images designed for data science workflows. These images include Debian Testing, JupyterLab, the master branch of Apache Spark, and the latest supported version of Pandas. They are optimized for both Docker and Kubernetes (k8s) environments, catering to a wide range of data processing and analysis needs.
+[![Build Status](https://github.com/bjornjorgensen/jupyter-spark-master-docker/actions/workflows/build_and_push_spark_images.yml/badge.svg)](https://github.com/bjornjorgensen/jupyter-spark-master-docker/actions)
+[![Docker Pulls](https://img.shields.io/docker/pulls/bjornjorgensen/spark-driver)](https://hub.docker.com/r/bjornjorgensen/spark-driver)
+
+This project provides daily-built Docker images designed for distributed data science workflows. These images combine Debian Testing, JupyterLab, Apache Spark (master branch), and optimized Python packages for both local development and production Kubernetes deployments.
+
+## 🚀 Quick Start
+
+1. Copy the environment template:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your preferred settings
+   ```
+
+2. Start the environment:
+   ```bash
+   docker-compose up -d
+   ```
+
+3. Access JupyterLab at http://localhost:8888 (use token from .env file)
 
 ## Features
 
@@ -9,16 +27,53 @@ This project provides daily built Docker images designed for data science workfl
 - **Apache Spark (master branch)**: Provides the latest features and improvements from the Apache Spark project. Only Python and K8S package included.
 - **Pandas (latest Spark supported version)**: Includes the most recent enhancements and fixes from the Pandas library.
 
-## How to Use
+## 📋 Prerequisites
 
-### Running with Docker
+- Docker and Docker Compose
+- For Kubernetes: kubectl and Helm
+- Minimum 4GB RAM recommended
+- For production: 16GB+ RAM recommended
 
-Change `JUPYTER_TOKEN: "Password"` to your desired password in the docker-compose.yaml file.
+## 🏗️ Architecture
 
-To get started with Docker, use the following command to pull and run the image:
+### Multi-Stage Build System
+- **spark-builder**: Compiles Apache Spark from master branch
+- **spark-driver**: JupyterLab + Spark driver for interactive development  
+- **spark-worker**: Lightweight Spark executors for distributed processing
+- **dep-builder**: Base dependency layer with optimized Python packages
 
-```shell
-docker-compose up -d
+### Key Technologies
+- **OS**: Debian Testing (rolling release)
+- **Python**: Latest stable with `uv` package manager
+- **Spark**: Master branch with Kubernetes support
+- **Storage**: S3A support for object storage integration
+
+## 🐳 Usage
+
+### Local Development
+
+1. **Configuration**: Copy and customize the environment file:
+   ```bash
+   cp .env.example .env
+   # Edit JUPYTER_TOKEN and other settings
+   ```
+
+2. **Start Services**:
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Access Points**:
+   - JupyterLab: http://localhost:8888
+   - Spark UI: http://localhost:4040
+
+### Directory Structure
+```
+your-project/
+├── .env                 # Your environment configuration
+├── data/               # Mount point for datasets
+├── test_notebooks/     # Jupyter notebooks
+└── docker-compose.yaml # Service configuration
 ```
 
 You can interact with the Apache Spark and Pandas frameworks directly from Python. Here's a brief setup for initializing a SparkSession and configuring it for your needs:
@@ -143,4 +198,111 @@ spark = SparkSession.builder \
   .appName("pandas-on-spark") \
   # Create the SparkSession with the specified configurations
   .getOrCreate()
+```
+
+## 📊 Performance Tuning
+
+### Memory Configuration
+- **Local**: Automatically detects and uses available system resources
+- **Kubernetes**: Configure based on node capacity and workload requirements
+
+### Recommended Settings
+```yaml
+# For 16GB nodes
+spark.driver.memory: "8g"
+spark.executor.memory: "6g"
+spark.executor.cores: "4"
+
+# For 32GB nodes  
+spark.driver.memory: "16g"
+spark.executor.memory: "12g"
+spark.executor.cores: "6"
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**Issue**: JupyterLab won't start
+```bash
+# Check logs
+docker-compose logs jupyter
+
+# Verify port availability
+netstat -tlnp | grep 8888
+```
+
+**Issue**: Spark jobs fail in Kubernetes
+```bash
+# Check Spark driver logs
+kubectl logs -l app=my-pyspark-notebook
+
+# Verify node labels
+kubectl get nodes --show-labels | grep node-role
+```
+
+**Issue**: Out of memory errors
+```bash
+# Increase memory limits in .env
+SPARK_DRIVER_MEMORY=8g
+SPARK_EXECUTOR_MEMORY=6g
+
+# Restart services
+docker-compose restart
+```
+
+### Debug Mode
+Enable debug logging:
+```python
+spark.sparkContext.setLogLevel("DEBUG")
+```
+
+## 🔒 Security
+
+- **Default Authentication**: Token-based access to JupyterLab
+- **Network Security**: Services bound to localhost by default
+- **Container Security**: Runs as non-root user (jovyan)
+- **Kubernetes**: RBAC-enabled with service accounts
+
+See [SECURITY.md](SECURITY.md) for detailed security guidelines.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/improvement`
+3. Make your changes and test them
+4. Submit a pull request
+
+### Development Setup
+```bash
+# Clone the repository
+git clone https://github.com/bjornjorgensen/jupyter-spark-master-docker.git
+cd jupyter-spark-master-docker
+
+# Build images locally  
+docker-compose build
+
+# Test the setup
+docker-compose up -d
+```
+
+## 📜 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🆘 Support
+
+- **Issues**: [GitHub Issues](https://github.com/bjornjorgensen/jupyter-spark-master-docker/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/bjornjorgensen/jupyter-spark-master-docker/discussions)
+- **Documentation**: [Wiki](https://github.com/bjornjorgensen/jupyter-spark-master-docker/wiki)
+
+## 🏷️ Tags and Versions
+
+- `latest`: Most recent stable build
+- `DDMMYYYY`: Daily builds (e.g., `23092025`)
+- `spark-builder`: Base Spark compilation image
+- `spark-driver`: JupyterLab-enabled driver image
+- `spark-worker`: Lightweight worker image
+
+````
 ```

@@ -1,0 +1,134 @@
+name: Check Action Updates
+
+on:
+  schedule:
+    - cron: '0 9 * * MON'  # Weekly on Monday at 9 AM UTC
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for action updates
+        run: |
+          echo "## GitHub Actions Version Check Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Current versions in use:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Extract current versions from workflow files
+          echo "| Action | Current Version | Repository |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-----------------|------------|" >> $GITHUB_STEP_SUMMARY
+          
+          # Find all uses: statements with versions
+          find .github/workflows -name "*.yml" -exec grep -H "uses:" {} \; | \
+          grep "@" | \
+          grep -v "\./" | \
+          sed 's/.*uses: *//' | \
+          sort -u | \
+          while read action; do
+            name=$(echo "$action" | cut -d@ -f1)
+            version=$(echo "$action" | cut -d@ -f2)
+            echo "| \`$name\` | \`$version\` | [View]($https://github.com/$name) |" >> $GITHUB_STEP_SUMMARY
+          done
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### How to Update:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Visit each repository link above" >> $GITHUB_STEP_SUMMARY
+          echo "2. Check the 'Releases' tab for the latest version" >> $GITHUB_STEP_SUMMARY
+          echo "3. Review changelogs for breaking changes" >> $GITHUB_STEP_SUMMARY  
+          echo "4. Update the version numbers in workflow files" >> $GITHUB_STEP_SUMMARY
+          echo "5. Test the updated workflows" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Note:** Dependabot is configured to automatically create PRs for updates." >> $GITHUB_STEP_SUMMARY
+
+      - name: Create issue if outdated actions found
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Read workflow files and extract action versions
+            const workflowDir = '.github/workflows';
+            const files = fs.readdirSync(workflowDir);
+            const actions = new Set();
+            
+            files.forEach(file => {
+              if (file.endsWith('.yml') || file.endsWith('.yaml')) {
+                const content = fs.readFileSync(path.join(workflowDir, file), 'utf8');
+                const matches = content.match(/uses:\s*([^@\s]+@[^@\s]+)/g);
+                if (matches) {
+                  matches.forEach(match => {
+                    const action = match.replace('uses:', '').trim();
+                    if (!action.startsWith('./')) {
+                      actions.add(action);
+                    }
+                  });
+                }
+              }
+            });
+            
+            if (actions.size > 0) {
+              console.log('Found actions:', Array.from(actions));
+              
+              // Check if there's already an open issue about action updates
+              const existingIssues = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'github-actions,maintenance'
+              });
+              
+              const hasExistingIssue = existingIssues.data.some(issue => 
+                issue.title.includes('GitHub Actions Update Check')
+              );
+              
+              if (!hasExistingIssue) {
+                const actionsList = Array.from(actions)
+                  .map(action => `- \`${action}\` - [Repository](https://github.com/${action.split('@')[0]})`)
+                  .join('\n');
+                
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: '🔄 GitHub Actions Update Check - ' + new Date().toISOString().split('T')[0],
+                  body: `## Weekly GitHub Actions Update Check
+                  
+This issue is created automatically to remind you to check for GitHub Actions updates.
+
+### Current Actions in Use:
+
+${actionsList}
+
+### Update Process:
+
+1. **Check each action's releases page** for newer versions
+2. **Review changelogs** for any breaking changes
+3. **Update workflow files** with new version numbers
+4. **Test the workflows** to ensure they work correctly
+
+### Quick Links:
+
+- [GitHub Actions Marketplace](https://github.com/marketplace?type=actions)
+- [Dependabot Pull Requests](https://github.com/${context.repo.owner}/${context.repo.repo}/pulls?q=is%3Apr+is%3Aopen+author%3Aapp%2Fdependabot)
+
+### Automation:
+
+- Dependabot is configured to automatically create PRs for action updates
+- This check runs weekly to remind about manual reviews
+
+---
+
+*This issue can be closed after reviewing and updating the actions.*`,
+                  labels: ['github-actions', 'maintenance', 'automation']
+                });
+                
+                console.log('Created issue for GitHub Actions update check');
+              } else {
+                console.log('Similar issue already exists, skipping creation');
+              }
+            }

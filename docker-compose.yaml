@@ -1,13 +1,31 @@
-version: '3.7'
+version: '3.8'
 
 services:
   jupyter:
     image: bjornjorgensen/spark-driver:latest
-    restart: 'no'
+    restart: unless-stopped
     volumes:
       - ./test_notebooks:/home/jovyan/notebooks
+      # Optional: Mount local data directory
+      - ./data:/home/jovyan/data
     ports:
       - "8888:8888"
-      - "4040:4040"
+      - "4040:4040"  # Spark UI
+      - "4041:4041"  # Additional Spark UI port
     environment:
-      JUPYTER_TOKEN: "Password"
+      # Security: Use environment file or override this
+      JUPYTER_TOKEN: "${JUPYTER_TOKEN:-Password}"
+      # Performance: Set JVM options
+      SPARK_DRIVER_MEMORY: "${SPARK_DRIVER_MEMORY:-2g}"
+      SPARK_EXECUTOR_MEMORY: "${SPARK_EXECUTOR_MEMORY:-2g}"
+      # Development: Enable Jupyter lab extensions
+      JUPYTER_ENABLE_LAB: "yes"
+    # Optional: Add health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/api"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    # Security: Run as non-root
+    user: "${UID:-1000}:${GID:-1000}"
