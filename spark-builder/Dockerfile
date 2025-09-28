@@ -1,7 +1,7 @@
 # Multi-stage build: dependencies → build → runtime
 FROM debian:testing AS spark-builder
 
-ARG openjdk_version="25"
+ARG openjdk_version="21"
 
 USER root
 
