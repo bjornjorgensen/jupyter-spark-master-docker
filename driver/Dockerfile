@@ -65,12 +65,12 @@ RUN uv pip install \
 
 USER root
 # Copy the Spark distribution from the builder stage
-COPY --from=builder /tmp/spark/spark-4.1.0-SNAPSHOT-bin-custom-spark.tgz /tmp/spark.tgz
+COPY --from=builder /tmp/spark/spark-4.2.0-SNAPSHOT-bin-custom-spark.tgz /tmp/spark.tgz
 
 # Unpack Spark, move it to /opt/spark, and remove the tarball
 RUN tar xzf /tmp/spark.tgz -C /usr/local && \
     rm /tmp/spark.tgz && \
-    mv /usr/local/spark-4.1.0-SNAPSHOT-bin-custom-spark /opt/spark
+    mv /usr/local/spark-4.2.0-SNAPSHOT-bin-custom-spark /opt/spark
 
 # Configure Spark paths
 ENV SPARK_HOME="/opt/spark"
