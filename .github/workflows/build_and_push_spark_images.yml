@@ -22,7 +22,7 @@ env:
 
 jobs:
   spark-builder:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       image-digest: ${{ steps.build.outputs.digest }}
       build-date: ${{ steps.date.outputs.date }}
@@ -71,7 +71,7 @@ jobs:
 
   spark-worker-and-driver:
     needs: spark-builder
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       fail-fast: false
       matrix:
